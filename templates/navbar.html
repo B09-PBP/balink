@@ -1,0 +1,47 @@
+{% load static %}
+<!-- Navbar -->
+<nav class="bg-white border-gray-200 px-4 sm:px-8 py-4 shadow-lg">
+  <div class="container flex flex-wrap justify-between items-center mx-auto">
+    <!-- Logo and Brand Name -->
+    
+      <!-- <img src="{% static 'images/balink-logo.png' %}" alt="Balink Logo" class="h-8 w-auto mr-3"> -->
+      <span class="self-center text-xl font-semibold whitespace-nowrap text-blue-600">Balink</span>
+    </a>
+
+    <!-- Hamburger Icon for Mobile -->
+    <button
+      data-collapse-toggle="navbar"
+      type="button"
+      class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+      aria-controls="navbar"
+      aria-expanded="false"
+    >
+      <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path
+          fill-rule="evenodd"
+          d="M3 5h14a1 1 0 01.993.883L18 6a1 1 0 01-.883.993L17 7H3a1 1 0 01-.993-.883L2 6a1 1 0 01.883-.993L3 5h14H3zm0 4h14a1 1 0 01.993.883L18 10a1 1 0 01-.883.993L17 11H3a1 1 0 01-.993-.883L2 10a1 1 0 01.883-.993L3 9h14H3zm0 4h14a1 1 0 01.993.883L18 14a1 1 0 01-.883.993L17 15H3a1 1 0 01-.993-.883L2 14a1 1 0 01.883-.993L3 13h14H3z"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+    </button>
+
+    <!-- Navigation Links -->
+    <div class="hidden w-full md:flex md:w-auto" id="navbar">
+      <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Additional Script (for Toggle Functionality) -->
+<script>
+  document.querySelector("[data-collapse-toggle]").addEventListener("click", () => {
+    const nav = document.getElementById("navbar");
+    nav.classList.toggle("hidden");
+  });
+</script>
