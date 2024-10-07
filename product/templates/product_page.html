@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="container mx-auto mt-6">
+  <div class="relative bg-gradient-to-r from-blue-800 to-gray-900 rounded-lg overflow-hidden shadow-xl">
+    <!-- Carousel Content -->
+    <div class="carousel-wrapper overflow-hidden relative">
+      <div class="carousel-slide flex transition-transform duration-500 ease-in-out">
+        
+        <!-- Slide 1 -->
+        <div class="w-full flex-shrink-0 flex items-center justify-between space-x-6 bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-lg p-10">
+          <div>
+            <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-3 md:mb-5 leading-snug">Exclusive Transportation Collection</h2>
+            <h5 class="text-2xl md:text-3xl font-semibold mb-3 md:mb-5 text-blue-300">Elevate Your Experience</h5>
+            <p class="text-gray-300 mb-6 leading-relaxed">Browse our premium range of transportation options for all occasions.</p>
+            <a href="#" class="bg-yellow-400 hover:bg-yellow-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-lg font-semibold transition transform duration-300 hover:scale-105">Explore Now</a>
+          </div>
+          <div class="relative">
+            <img src="https://via.placeholder.com/240" alt="Featured Transport" class="w-80 h-80 object-cover rounded-lg shadow-lg" />
+            <div class="absolute top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-full font-semibold text-xs">54% Off</div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="w-full flex-shrink-0 flex items-center justify-between space-x-6 bg-gradient-to-br from-blue-800 to-blue-600 text-white rounded-lg p-10">
+          <div>
+            <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-3 md:mb-5 leading-snug">Modern & Stylish Designs</h2>
+            <h5 class="text-2xl md:text-3xl font-semibold mb-3 md:mb-5 text-blue-300">Travel with Ease</h5>
+            <p class="text-gray-300 mb-6 leading-relaxed">Experience our latest transportation styles and designs.</p>
+            <a href="#" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-lg font-semibold transition transform duration-300 hover:scale-105">Discover Now</a>
+          </div>
+          <div class="relative">
+            <img src="https://via.placeholder.com/240" alt="Modern Transport" class="w-80 h-80 object-cover rounded-lg shadow-lg" />
+            <div class="absolute top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-full font-semibold text-xs">30% Off</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Product List Section -->
+<div class="mt-8 space-y-6">
+  <!-- Product 1 -->
+  <div class="flex items-center space-x-4">
+    <img src="https://via.placeholder.com/100" alt="Car Model 1" class="w-24 h-24 object-cover rounded-lg">
+    <div>
+      <h3 class="text-xl font-semibold">Luxury Sedan</h3>
+      <p class="text-gray-500 text-sm">Comfort and style for every journey.</p>
+      <p class="text-emerald-600 font-semibold">$30,000</p>
+      <a href="#" class="text-emerald-500 text-sm font-medium hover:underline">View Details</a>
+    </div>
+  </div>
+
+  <!-- Product 2 -->
+  <div class="flex items-center space-x-4">
+    <img src="https://via.placeholder.com/100" alt="Car Model 2" class="w-24 h-24 object-cover rounded-lg">
+    <div>
+      <h3 class="text-xl font-semibold">SUV Premium</h3>
+      <p class="text-gray-500 text-sm">Ideal for family trips with space and comfort.</p>
+      <p class="text-emerald-600 font-semibold">$40,000</p>
+      <a href="#" class="text-emerald-500 text-sm font-medium hover:underline">View Details</a>
+    </div>
+  </div>
+
+  <!-- Product 3 -->
+  <div class="flex items-center space-x-4">
+    <img src="https://via.placeholder.com/100" alt="Car Model 3" class="w-24 h-24 object-cover rounded-lg">
+    <div>
+      <h3 class="text-xl font-semibold">Electric Compact</h3>
+      <p class="text-gray-500 text-sm">Eco-friendly and ideal for urban commuting.</p>
+      <p class="text-emerald-600 font-semibold">$25,000</p>
+      <a href="#" class="text-emerald-500 text-sm font-medium hover:underline">View Details</a>
+    </div>
+  </div>
+</div>
+<script>
+  let currentIndex = 0;
+  const slides = document.querySelectorAll('.carousel-slide > div');
+
+  function showSlide(index) {
+    const offset = -index * 100;
+    document.querySelector('.carousel-slide').style.transform = `translateX(${offset}%)`;
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % slides.length;
+    showSlide(currentIndex);
+  }
+
+  // Automatically move to the next slide every 10 seconds (10000 ms)
+  setInterval(nextSlide, 10000);
+</script>
+
+{% endblock %}
