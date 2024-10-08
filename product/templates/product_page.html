@@ -40,57 +40,70 @@
     </div>
   </div>
 </div>
-<!-- Product List Section -->
-<div class="mt-8 space-y-6">
-  <!-- Product 1 -->
-  <div class="flex items-center space-x-4">
-    <img src="https://via.placeholder.com/100" alt="Car Model 1" class="w-24 h-24 object-cover rounded-lg">
-    <div>
-      <h3 class="text-xl font-semibold">Luxury Sedan</h3>
-      <p class="text-gray-500 text-sm">Comfort and style for every journey.</p>
-      <p class="text-emerald-600 font-semibold">$30,000</p>
-      <a href="#" class="text-emerald-500 text-sm font-medium hover:underline">View Details</a>
-    </div>
-  </div>
 
-  <!-- Product 2 -->
-  <div class="flex items-center space-x-4">
-    <img src="https://via.placeholder.com/100" alt="Car Model 2" class="w-24 h-24 object-cover rounded-lg">
-    <div>
-      <h3 class="text-xl font-semibold">SUV Premium</h3>
-      <p class="text-gray-500 text-sm">Ideal for family trips with space and comfort.</p>
-      <p class="text-emerald-600 font-semibold">$40,000</p>
-      <a href="#" class="text-emerald-500 text-sm font-medium hover:underline">View Details</a>
-    </div>
-  </div>
-
-  <!-- Product 3 -->
-  <div class="flex items-center space-x-4">
-    <img src="https://via.placeholder.com/100" alt="Car Model 3" class="w-24 h-24 object-cover rounded-lg">
-    <div>
-      <h3 class="text-xl font-semibold">Electric Compact</h3>
-      <p class="text-gray-500 text-sm">Eco-friendly and ideal for urban commuting.</p>
-      <p class="text-emerald-600 font-semibold">$25,000</p>
-      <a href="#" class="text-emerald-500 text-sm font-medium hover:underline">View Details</a>
-    </div>
-  </div>
+<!-- Search and Filter Section -->
+<div class="flex items-center mt-6 space-x-4">
+  <input type="text" id="search-bar" placeholder="Search transportation..." class="px-4 py-2 border rounded-md w-full">
+  <select id="type-filter" class="px-4 py-2 border rounded-md">
+    <option value="">All Types</option>
+    <option value="Luxury">Luxury</option>
+    <option value="SUV">SUV</option>
+    <option value="Electric">Electric</option>
+  </select>
 </div>
+
+<!-- Product List Section -->
+<div id="product-list" class="mt-8 space-y-6">
+  <!-- Products will be dynamically rendered here -->
+</div>
+
 <script>
-  let currentIndex = 0;
-  const slides = document.querySelectorAll('.carousel-slide > div');
+  const products = [
+    { type: 'Luxury', name: 'Luxury Sedan', description: 'Comfort and style for every journey.', price: '$30,000', img: 'https://via.placeholder.com/100' },
+    { type: 'SUV', name: 'SUV Premium', description: 'Ideal for family trips with space and comfort.', price: '$40,000', img: 'https://via.placeholder.com/100' },
+    { type: 'Electric', name: 'Electric Compact', description: 'Eco-friendly and ideal for urban commuting.', price: '$25,000', img: 'https://via.placeholder.com/100' },
+  ];
 
-  function showSlide(index) {
-    const offset = -index * 100;
-    document.querySelector('.carousel-slide').style.transform = `translateX(${offset}%)`;
+  function renderProducts(filteredProducts) {
+    const productList = document.getElementById('product-list');
+    productList.innerHTML = '';
+
+    filteredProducts.forEach(product => {
+      const productDiv = document.createElement('div');
+      productDiv.classList.add('flex', 'items-center', 'space-x-4');
+
+      productDiv.innerHTML = `
+        <img src="${product.img}" alt="${product.name}" class="w-24 h-24 object-cover rounded-lg">
+        <div>
+          <h3 class="text-xl font-semibold">${product.name}</h3>
+          <p class="text-gray-500 text-sm">${product.description}</p>
+          <p class="text-emerald-600 font-semibold">${product.price}</p>
+          <a href="#" class="text-emerald-500 text-sm font-medium hover:underline">View Details</a>
+        </div>
+      `;
+
+      productList.appendChild(productDiv);
+    });
   }
 
-  function nextSlide() {
-    currentIndex = (currentIndex + 1) % slides.length;
-    showSlide(currentIndex);
+  function filterProducts() {
+    const searchQuery = document.getElementById('search-bar').value.toLowerCase();
+    const typeFilter = document.getElementById('type-filter').value;
+
+    const filteredProducts = products.filter(product => {
+      const matchesType = typeFilter ? product.type === typeFilter : true;
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery) || product.description.toLowerCase().includes(searchQuery);
+      return matchesType && matchesSearch;
+    });
+
+    renderProducts(filteredProducts);
   }
 
-  // Automatically move to the next slide every 10 seconds (10000 ms)
-  setInterval(nextSlide, 10000);
+  document.getElementById('search-bar').addEventListener('input', filterProducts);
+  document.getElementById('type-filter').addEventListener('change', filterProducts);
+
+  // Initial render
+  renderProducts(products);
 </script>
 
 {% endblock %}
