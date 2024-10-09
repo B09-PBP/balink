@@ -12,9 +12,7 @@
 
 ## Filosofi BaLink : Menghubungkan Perjalanan Anda dengan BaLink
 
-Nama **BaLink** berasal dari kata “Bali” yang merujuk pada lokasi daerah operasi kami di Bali, dan “Link” yang berarti penghubung. BaLink berperan sebagai penghubung antara wisatawan dan kebutuhan transportasi mereka selama menjelajahi Bali. BaLink diibaratkan sebagai kendaraan yang mengantarkan pengguna menuju petualangan dan pengalaman baru di setiap sudut Bali. Dengan BaLink, pengguna dapat merasakan kemudahan dalam menyewa kendaraan yang akan membantu mereka menemukan keindahan Pulau Dewata. BaLink dirancang untuk menjadi solusi transportasi yang praktis dan nyaman bagi semua wisatawan yang ingin berkeliling Bali dengan mudah.
-
-**BaLink** adalah aplikasi rental mobil di Denpasar yang dilengkapi dengan berbagai fitur untuk memudahkan wisatawan menemukan dan menyewa kendaraan dengan cepat dan mudah. Aplikasi ini juga menawarkan fitur ulasan dan bookmark, yang memungkinkan pengguna untuk mengelola preferensi dan memeriksa kembali pilihan mereka sebelum menyewa.
+Nama **BaLink** berasal dari kata “Bali” dan “Link” yang berarti penghubung. **BaLink** adalah aplikasi rental mobil di Denpasar yang dilengkapi dengan berbagai fitur untuk memudahkan wisatawan menemukan dan menyewa kendaraan dengan cepat dan mudah. BaLink berperan sebagai penghubung antara wisatawan dari Denpasar dan kebutuhan transportasi mereka selama menjelajahi Bali. BaLink diibaratkan sebagai kendaraan yang mengantarkan pengguna menuju petualangan dan pengalaman baru di setiap sudut Bali. Dengan BaLink, pengguna dapat merasakan kemudahan dalam menyewa kendaraan yang akan membantu mereka menemukan keindahan Pulau Dewata. BaLink dirancang untuk menjadi solusi transportasi yang praktis dan nyaman bagi semua wisatawan yang ingin berkeliling Bali dengan mudah.
 
 Untuk memudahkan pengguna dalam mencari transportasi yang tersedia, BaLink menyediakan berbagai layanan yang dapat digunakan, seperti:
 - **Product Page (Explore)** menampilkan berbagai pilihan mobil yang tersedia untuk disewa. Pengguna dapat melihat detail mobil, seperti merek, tipe, harga, tahun, dan kapasitas. Selain itu, pengguna bisa melakukan filter untuk menemukan mobil berdasarkan kategori tertentu seperti harga, kapasitas penumpang, atau jenis mobil.
@@ -116,14 +114,15 @@ Admin memiliki full-access terhadap seluruh fitur aplikasi, seperti :
 - Mengelola konten promosi yang ditampilkan di aplikasi.
 - Memantau dan memoderasi ulasan yang diberikan oleh customer.
 - Memantau dan mengelola transaksi penyewaan mobil.
+- Menambahkan artikel dalam page "Place to Go"
 
 ### Customer
 Customer memiliki akses terbatas untuk menggunakan fitur penyewaan mobil, seperti :
 - Melihat katalog mobil, menggunakan filter, dan memilih mobil untuk disewa.
+- Membaca artikel dalam page "Place to Go"
 - Menyimpan mobil favorit ke dalam bookmark.
 - Menambahkan mobil ke keranjang dan melanjutkan ke proses penyewaan.
 - Memberikan ulasan dan rating terhadap mobil yang telah disewa.
-- Mengelola profil mereka, termasuk melihat riwayat penyewaan dan memperbarui informasi pribadi.
 
 Penjelasan lebih lengkap dapat dilihat pada daftar modul yang tersedia
 
