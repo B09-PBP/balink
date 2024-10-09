@@ -103,7 +103,12 @@ Aksi yang dapat dilakukan untuk Pengguna dan Admin :
 
 
 ## Dataset
-BaLink memanfaatkan dataset [Car Rental Dataset](https://docs.google.com/spreadsheets/d/1hVWBuQPsJDhXAda0jFSxmG-fYiRb1J9IpA4aU_mjMvY/edit?usp=sharing), yang merupakan gabungan dari dua dataset berbeda yang diperoleh dari [Kaggle Mobil](https://www.kaggle.com/datasets/nehalbirla/vehicle-dataset-from-cardekho) dan [Kaggle Motor](https://www.kaggle.com/datasets/nehalbirla/motorcycle-dataset). Dataset ini mencakup informasi penting seperti tipe kendaraan, tahun produksi, harga jual, jarak tempuh, beserta gambar kendaraan.
+BaLink memanfaatkan dataset [Car Rental Dataset](https://docs.google.com/spreadsheets/d/1hVWBuQPsJDhXAda0jFSxmG-fYiRb1J9IpA4aU_mjMvY/edit?usp=sharing), yang merupakan gabungan dari dua dataset berbeda yang diperoleh dari [Kaggle Mobil](https://www.kaggle.com/datasets/nehalbirla/vehicle-dataset-from-cardekho) dan [Kaggle Motor](https://www.kaggle.com/datasets/nehalbirla/motorcycle-dataset). Dataset ini mencakup informasi penting seperti tipe kendaraan, tahun produksi, harga jual, jarak tempuh, beserta gambar kendaraan. Selain itu, terdapat 5 toko yang menjadi mitra dari Balink yaitu:
+- Denpasar Transport (https://maps.app.goo.gl/Vm7d2yYqc88ZbVCn6)
+- MJ TRANS TOUR & RENTAL (https://maps.app.goo.gl/atkrH9cH6LTGUbXP7)
+- Garuda Bali Transport (https://maps.app.goo.gl/1GKBrdCbTyPcHPc86)
+- Santika Bali Rental (https://maps.app.goo.gl/AhZYaUkQCmYxwBvn9)
+- Bali Bija Car Rental (https://maps.app.goo.gl/HD8P13X3NfaFJ5P57)
 
 ## Jenis Pengguna 
 Aplikasi BaLink memiliki dua tipe pengguna, yaitu:
