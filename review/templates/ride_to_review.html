@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Choose Ride to Review BaLink</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<!-- Header halaman ride to review -->
+<div class="bg-[#2F69AC] rounded-lg w-screen mx-0 p-8 max-h-[80vh] flex flex-col justify-center items-center text-center my-auto">
+    <h1 class="text-4xl text-slate-50 font-bold mb-4">Choose your ride to review!</h1>
+</div>
+
+<div class="container mx-auto mt-6">
+    <div class="product-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="product-list">
+        {% for product in products %}
+        <div class="product-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl flex flex-col">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image w-full h-48 object-cover" />
+            <div class="product-info p-4 text-center">
+                <h2 class="product-name text-2xl font-semibold">{{ product.name }}</h2>
+            </div>
+            <div class="card-footer p-4 mt-auto flex justify-center">
+                <a href="{% url 'review:form_review' product.id %}" class="rent-button bg-[#FFC705] text-black px-4 py-2 rounded hover:bg-[#FF9B05]">Review this ride!</a>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-gray-600">No products available to review at this time.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

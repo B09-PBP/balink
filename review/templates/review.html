@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Review BaLink</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<!-- Header halaman main review -->
+<div class="bg-[#2F69AC] rounded-lg w-screen mx-0 p-8 max-h-[80vh] flex flex-col justify-center items-center text-center my-auto">
+  <h1 class="text-6xl text-slate-50 font-bold mb-4">Share your ride experience!</h1>
+  <br>
+  <p class="text-2xl text-slate-50">
+    "Share your driving experience in Denpasar! Let others know how BaLink made your trip to dream destinations easier."
+  </p>
+  <br>
+  <div class="flex justify-center mt-6">
+    <a href="{% url 'review:ride_to_review' %}" class="bg-[#FFC705] hover:bg-[#FF9B05] text-black py-2 px-4 rounded-lg transition duration-300">
+      Add My Review
+    </a>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Review BaLink</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<style>
+    .form-style form input, 
+    .form-style form textarea, 
+    .form-style form select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #bcbcbc;
+    border-radius: 0.375rem;
+}
+</style>
+
+<div class="flex flex-col min-h-screen bg-[#2F69AC] ">
+    <div class="container mx-auto px-4 py-8 max-w-xl">
+        <div class="product-card bg-white rounded-lg shadow-md p-6">
+        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image w-full h-48 object-cover mb-4" />
+        <p class="product-name text-2xl font-semibold text-center">{{ product.name }}</p>
+
+        <div class="bg-white shadow-md rounded-lg p-6 form-style">
+        <form method="POST" action="{% url 'review:create_review' %}" class="space-y-6">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ product.id }}">
+            {% for field in form %}
+            <div class="flex flex-col">
+                <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-700">
+                {{ field.label }}
+                </label>
+                <div class="w-full">
+                {{ field }}
+                </div>
+                {% if field.help_text %}
+                <p class="mt-1 text-sm text-gray-500">{{ field.help_text }}</p>
+                {% endif %}
+                {% for error in field.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <div class="flex justify-center mt-6">
+            <button type="submit" class="bg-[#FFC705] text-black font-semibold px-6 py-3 rdouned-lg hover:bg-[#FF9B05] transition duration-300 ease-in-out w-full">
+                Confirm
+            </button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
