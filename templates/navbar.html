@@ -1,11 +1,10 @@
 {% load static %}
 <!-- Navbar -->
-<nav class="bg-white border-gray-200 px-4 sm:px-8 py-4 shadow-lg">
+<nav class="bg-white border-b border-gray-200 px-4 sm:px-8 py-4 shadow-lg">
   <div class="container flex flex-wrap justify-between items-center mx-auto">
     <!-- Logo and Brand Name -->
-    
-      <!-- <img src="{% static 'images/balink-logo.png' %}" alt="Balink Logo" class="h-8 w-auto mr-3"> -->
-      <span class="self-center text-xl font-semibold whitespace-nowrap text-blue-600">Balink</span>
+    <a href="#" class="flex items-center">
+      <span class="self-center text-3xl font-bold whitespace-nowrap text-yellow-400" style="font-family: 'Poppins', letter-spacing: 1px"> Ba<span class="text-blue-600">Link</span> </span>
     </a>
 
     <!-- Hamburger Icon for Mobile -->
@@ -27,13 +26,39 @@
 
     <!-- Navigation Links -->
     <div class="hidden w-full md:flex md:w-auto" id="navbar">
-      <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+      <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium text-blue-600">
+        <li>
+          <a href="/" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Home</a>
+        </li>
+        <li>
+          <a href="/product/" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Products</a>
+        </li>
+        <li>
+          <a href="#" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Services</a>
+        </li>
+        <li>
+          <a href="#" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Contact</a>
+        </li>
+        <li>
+          <a href="#" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Blog</a>
+        </li>
       </ul>
+
+      <!--login and register button-->
+      <div class="ml-12">
+        <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+          <li>
+            <a href="/auth/register">
+              <button class="block py-2 px-4 text-black bg-yellow-400 hover:bg-yellow-500 rounded-md">Register</button>
+            </a>
+          </li>
+          <li>
+            <a href="/auth/login">
+              <button class="block py-2 px-4 text-white bg-blue-600 hover:bg-blue-700 rounded-md">Login</button>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>
