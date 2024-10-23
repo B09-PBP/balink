@@ -28,17 +28,6 @@ def ride_to_review(request):
 
     return render(request, "ride_to_review.html", context)
 
-def form_review(request, uuid):
-    product = get_object_or_404(Product,id=uuid)
-    form = ReviewEntryForm(request.POST or None)
-    print(product)
-    context = {
-        'product': product,
-        'form' : form,
-    }
-
-    return render(request, 'create_review_form.html', context)
-
 @csrf_exempt
 def create_review(request):
     if request.method == "POST":
