@@ -23,4 +23,26 @@
   </div>
 </div>
 
+<div class="container mx-auto mt-6">
+  <h2 class="text-4xl text-gray-700 font-bold mb-6">User Reviews</h2>
+
+  {% if reviews %}
+    <div class="grid grid-cols-1 gap-6">
+      {% for review in reviews %}
+        <div class="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row">
+          <img src="{{ review.ride.image_url }}" alt="{{ review.ride.name }}" class="w-40 h-40 object-cover rounded-lg md:mr-6" />
+          <div>
+            <h3 class="text-2xl font-semibold text-gray-900">{{ review.ride.name }}</h3>
+            <p class="text-sm text-gray-600">Reviewed by {{ review.user.username }}</p>
+            <p class="text-yellow-500">Rating: {{ review.rating }} / 5</p>
+            <p class="text-gray-800 mt-4">{{ review.review_message }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-gray-600">No reviews available yet.</p>
+  {% endif %}
+</div>
+
 {% endblock content %}

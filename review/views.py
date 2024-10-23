@@ -6,11 +6,14 @@ from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.utils.html import strip_tags
 
 # Create your views here.
 def show_main(request):
+    review = Review.objects.all()
     context = {
-        'review' : 'review',
+        'review' : review,
     }
     return render(request, "review.html", context)
 
@@ -49,6 +52,25 @@ def create_review(request):
 
         return redirect('review')
     return HttpResponseNotFound()
+
+@csrf_exempt
+@require_POST
+def add_review_entry_ajax(request):
+    user = request.user 
+    ride = get_object_or_404(Product, id=request.POST.get("id"))
+    rating = request.POST.get("rating")
+    review_message = strip_tags(request.POST.get("review_message"))
+
+    new_review = Review(
+        user=user,
+        ride=ride,
+        rating=rating,
+        review_message=review_message,
+    )
+    
+    new_review.save() 
+
+    return HttpResponse(b"CREATED", status=201)
 
 def show_json(request):
     data = Review.objects.all()
