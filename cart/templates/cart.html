@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block meta %}
+<title>My Cart | BaLink</title>
+{% endblock meta %}
+
+{% block content %}
+
+<!-- Tambahkan Navbar -->
+{% include 'navbar.html' %}
+
+<div class="container mx-auto py-10">
+    <!-- Kotak Ringkasan Cart -->
+    <div class="bg-blue-600 text-white p-8 rounded-lg shadow-lg w-full max-w-3xl mx-auto text-left ">
+        <h2 class="text-2xl font-bold flex items-center">
+            My Cart
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 ml-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18M3 7h18M5 10l1 12m12-12l1 12M6 19h12M9 7V5c0-1.1.9-2 2-2s2 .9 2 2v2" />
+            </svg>
+        </h2>
+        <p class="text-lg mt-4">Ride: {{ total_items }}</p>
+        <div class="mt-6 flex justify-between text-xl font-bold">
+            <p>Total</p>
+            <p>Rp{{ total_price|floatformat:0 }}</p>
+        </div>
+        <button id="bookNowBtn" class="bg-yellow-400 text-blue-800 font-bold py-3 mt-8 w-full rounded-lg hover:bg-yellow-500 transition-all">
+            Book Now
+        </button>
+    </div>    
+
+    <!-- Daftar Mobil di Cart -->
+    <div class="mt-10 space-y-6 max-w-2xl mx-auto">
+        {% for product in cart %}
+        <div class="flex items-center bg-white p-6 rounded-lg shadow-md">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-32 h-32 rounded-lg object-cover mr-6">
+            <div class="flex-grow">
+                <h3 class="text-xl font-bold">{{ product.name }}</h3>
+                <p class="text-blue-700 mt-2">Rp{{ product.price }}/day</p>
+            </div>
+            <div>
+                <form method="POST" >
+                    {% csrf_token %}
+                    <button class="hover:text-red-600 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-gray-500">Your cart is empty.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="bookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden">
+    <div class="bg-white rounded-lg p-6 w-96 shadow-lg relative">
+        <button id="closeModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+            &times;
+        </button>
+        <h2 class="text-2xl font-bold mb-5 text-blue-600">Data</h2>
+        <form action="{% url 'cart:booking' %}" method="POST">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="nama" class="block text-sm font-medium text-gray-700">Nama Pembeli</label>
+                <input type="text" name="nama" id="nama" class="w-full border border-gray-300 p-2 rounded-lg" required>
+            </div>
+            <div class="mb-4">
+                <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat Tujuan</label>
+                <input type="text" name="alamat" id="alamat" class="w-full border border-gray-300 p-2 rounded-lg" required>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" id="cancelBtn" class="bg-gray-200 px-4 py-2 rounded-lg text-gray-700">Cancel</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Confirm</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Get modal element and buttons
+    const modal = document.getElementById('bookingModal');
+    const bookNowBtn = document.getElementById('bookNowBtn');
+    const closeModal = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    // Show modal when "Book Now" button is clicked
+    bookNowBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+
+    // Hide modal when close or cancel is clicked
+    closeModal.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+</script>
+
+{% endblock content %}

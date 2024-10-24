@@ -112,7 +112,10 @@
             <p class="product-dealer text-gray-600">Dealer: <span class="font-semibold">{{ product.dealer }}</span></p>
           </div>
           <div class="card-footer p-4">
-            <button class="rent-button bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Rent Now</button>
+            <form method="POST" action="{% url 'cart:add_to_cart' product.id %}">
+              {% csrf_token %}
+              <button type="submit" class="rent-now-btn">Rent Now</button>
+          </form>
           </div>
         </div>
         {% empty %}
