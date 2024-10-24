@@ -1,3 +1,3 @@
 from django.db import models
 
-# Create your models here.
+# Landing Page hanya 'hardcode html' yang menjadi page utama saat pengguna pertama kali membuka website BaLink
