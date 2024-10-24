@@ -13,11 +13,14 @@ from django.utils.html import strip_tags
 # Create your views here.
 def show_main(request):
     reviews = Review.objects.all()
+    user = request.user
     context = {
+        'user' : user,
         'reviews': reviews,
     }
     return render(request, "review.html", context)
 
+@login_required(login_url="authentication:login")
 def ride_to_review(request):
     rides = Product.objects.all()
     form = ReviewEntryForm(request.POST or None)
@@ -51,6 +54,15 @@ def add_review_entry_ajax(request):
     return render(request, 'review_form.html', {
         'error_message': "Invalid input. Please fill all fields.",
     })
+
+@login_required(login_url="authentication:login")
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    
+    if request.user.userprofile.user_privilege == "admin":
+        review.delete()
+    
+    return redirect('review:show_main')
 
 def show_json(request):
     data = Review.objects.all()

@@ -4,4 +4,4 @@ from django.contrib.auth.models import User
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    user_privelege = models.CharField(max_length=10, default="customer")
+    user_privilege = models.CharField(max_length=10, default="customer")
