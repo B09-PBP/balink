@@ -56,23 +56,23 @@
         <div class="flex flex-wrap justify-center gap-8 mt-8">
             <!-- Card 1 -->
             <div class="bg-white p-5 w-full sm:w-64 rounded-lg shadow-md">
-                <img src="car1.jpg" alt="Honda Car" class="w-full h-48 object-cover rounded-lg">
-                <h3 class="text-xl mt-4 font-bold text-gray-900">Honda Car 11</h3>
-                <p class="text-blue-600 font-bold text-lg">Rp500.000/day</p>
+                <img src="{% static 'img/mercedes-benz-gls-class.png' %}" alt="Benz" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="text-xl mt-4 font-bold text-gray-900">Mercedes-Benz GLS</h3>
+                <p class="text-blue-600 font-bold text-lg">Rp1.000.000/day</p>
             </div>
 
             <!-- Card 2 -->
             <div class="bg-white p-5 w-full sm:w-64 rounded-lg shadow-md">
-                <img src="car2.jpg" alt="Honda Car" class="w-full h-48 object-cover rounded-lg">
-                <h3 class="text-xl mt-4 font-bold text-gray-900">Honda Car 11</h3>
+                <img src="{% static 'img/motor-keren.jpg' %}" alt="Royal Enfield" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="text-xl mt-4 font-bold text-gray-900">Royal Enfield Thunderbird 350X</h3>
                 <p class="text-blue-600 font-bold text-lg">Rp500.000/day</p>
             </div>
 
             <!-- Card 3 -->
             <div class="bg-white p-5 w-full sm:w-64 rounded-lg shadow-md">
-                <img src="car3.jpg" alt="Honda Car" class="w-full h-48 object-cover rounded-lg">
-                <h3 class="text-xl mt-4 font-bold text-gray-900">Honda Car 11</h3>
-                <p class="text-blue-600 font-bold text-lg">Rp500.000/day</p>
+                <img src="{% static 'img/BMW-7-Series.png' %}" alt="BMW" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="text-xl mt-4 font-bold text-gray-900">BMW 7 Series 730Ld</h3>
+                <p class="text-blue-600 font-bold text-lg">Rp1.000.000/day</p>
             </div>
         </div>
     </section>
@@ -82,23 +82,32 @@
         <div class="bg-yellow-400 text-black text-3xl font-bold rounded-lg p-5 text-center mr-10 min-w-max">Our Services</div>
         <div class="max-w-2xl">
             <h3 class="text-xl text-blue-600">Pick-Up and Drop-Off Service</h3>
-            <p class="mt-2 leading-relaxed text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p class="mt-2 leading-relaxed text-gray-700">
+                BaLink ensures that customers have the convenience of being picked up and dropped off at their preferred locations. Whether for business or leisure, BaLink saves time and offers a seamless experience without the hassle of arranging separate transportation.
+            </p>
             <h3 class="text-xl text-blue-600 mt-5">Daily and Weekly Car Rentals</h3>
-            <p class="mt-2 leading-relaxed text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p class="mt-2 leading-relaxed text-gray-700">
+                Customers can choose from a variety of vehicles available for rental on both daily and weekly bases. This flexibility allows users to find transportation that suits their needs, whether for short-term errands or longer trips.
+            </p>
             <h3 class="text-xl text-blue-600 mt-5">24/7 Customer Support</h3>
-            <p class="mt-2 leading-relaxed text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p class="mt-2 leading-relaxed text-gray-700">
+                BaLink provides round-the-clock customer support, ensuring that any issues or inquiries are addressed promptly. BaLink aims to deliver peace of mind by providing reliable and responsive assistance at any hour.
+            </p>
         </div>
     </section>
 
     <!-- Offer Section (hidden until scroll) -->
     <section class="text-center py-12 bg-white scroll-section">
-        <h2 class="text-2xl text-blue-600">What We Offer?</h2>
+        <h2 class="text-3xl font-bold">
+            <span class="text-black">What We</span> 
+            <span class="text-blue-600">Offer</span><span class="text-black">?</span>
+        </h2>
         <div class="flex justify-center gap-5 mt-5 flex-wrap">
-            <div class="bg-white p-5 w-40 rounded-lg shadow-lg">Pick your Ride</div>
-            <div class="bg-white p-5 w-40 rounded-lg shadow-lg">Review your ride</div>
-            <div class="bg-white p-5 w-40 rounded-lg shadow-lg">Bookmark</div>
-            <div class="bg-white p-5 w-40 rounded-lg shadow-lg">Your Profile</div>
-            <div class="bg-white p-5 w-40 rounded-lg shadow-lg">Book your ride</div>
+            <a href="/product/" class="p-5 w-40 rounded-lg shadow-lg transition duration-300 ease-in-out hover:bg-gray-100">Pick Your Ride!</a>
+            <a href="/review/" class="p-5 w-40 rounded-lg shadow-lg transition duration-300 ease-in-out hover:bg-gray-100">Review Your Ride!</a>
+            <a href="/bookmark/" class="p-5 w-40 rounded-lg shadow-lg transition duration-300 ease-in-out hover:bg-gray-100">Bookmark</a>
+            <a href="/cart/" class="p-5 w-40 rounded-lg shadow-lg transition duration-300 ease-in-out hover:bg-gray-100">Book Your Ride!</a>
+            <a href="/article/" class="p-5 w-40 rounded-lg shadow-lg transition duration-300 ease-in-out hover:bg-gray-100">Article</a>
         </div>
     </section>
 
