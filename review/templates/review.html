@@ -22,22 +22,25 @@
   </div>
 </div>
 
-<h1 class="text-3xl font-bold mb-6 mt-6 px-4">All Reviews</h1>
-
-<div class="review-list">
-  {% for review in reviews %}
-  <div class="review-card p-4 mb-4 bg-white rounded-lg shadow-md">
-      <img src="{{ review.ride.image_url }}" alt="{{ review.ride.name }}" class="w-full h-32 object-cover rounded-md mb-2" />
-      <h2 class="text-xl font-bold">{{ review.ride.name }}</h2>
-      <p class="text-gray-600">Rating: {{ review.rating }}/5</p>
-      <p>{{ review.review_message }}</p>
-      <p class="text-sm text-gray-400">By {{ review.user.username }}</p>
-  </div>
-  {% endfor %}
+<div class="container mx-auto mt-6 px-4">
+    <div class="review-list grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for review in reviews %}
+        <div class="review-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl flex flex-col relative">
+            <div class="relative">
+                <img src="{{ review.ride.image_url }}" alt="{{ review.ride.name }}" class="w-full h-36 object-cover" />
+                <div class="absolute top-4 right-4 bg-white text-gray-900 px-3 py-1 rounded-full font-semibold text-x shadow-md">
+                    ⭐ {{ review.rating }}/5
+                </div>
+            </div>
+            <div class="review-info p-4 flex-grow text-left">
+                <h2 class="review-name text-1xl font-bold">{{ review.ride.name }}</h2>
+                <p class="text-gray-700 leading-relaxed">{{ review.review_message }}</p>
+            </div>
+            <p class="text-sm text-gray-400 p-4">Reviewed by {{ review.user.username }}</p>
+        </div>
+        {% empty %}
+        <p class="text-gray-600">No reviews yet.</p>
+        {% endfor %}
+    </div>
 </div>
-
-{% if not reviews %}
-<p class="text-gray-600">No reviews yet.</p>
-{% endif %}
-
 {% endblock content %}

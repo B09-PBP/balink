@@ -15,10 +15,10 @@
             <h2 class="text-4xl md:text-3xl font-bold leading-tight">Choose your ride to review!</h2>
         </div>
     </div>
-  </div>
+</div>
 
 <div class="container mx-auto mt-6 px-4">
-    <div class="product-list grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-6" id="product-list">
+    <div class="product-list grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6" id="product-list">
         {% for product in products %}
         <div class="product-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl flex flex-col">
             <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image w-full h-36 object-cover" />
@@ -27,21 +27,22 @@
             </div>
             <div class="card-footer p-4 mt-auto flex justify-center">
                 <button 
+                    data-product-id="{{ product.id }}" 
                     data-product-name="{{ product.name }}" 
                     data-product-image="{{ product.image_url }}" 
-                    class="btn bg-[#FFC705] hover:bg-[#FF9B05] text-black font-bold py-2 px-3 text-sm rounded-md" 
+                    class="rent-button bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" 
                     onclick="showModal(this);">
                     Review this Ride!
                 </button>
             </div>
 
-            <!-- Untuk modal AJAX -->
+            <!-- Modal untuk review -->
             <div id="crudModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-40 w-full flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-x-hidden overflow-y-auto transition-opacity duration-300 ease-out">
                 <div id="crudModalContent" class="relative bg-white rounded-lg shadow-lg w-5/6 sm:w-3/4 md:w-1/2 lg:w-1/3 mx-4 sm:mx-0 transform scale-95 opacity-0 transition-transform transition-opacity duration-300 ease-out p-6 overflow-auto max-h-[90vh]">
                     <!-- Modal header -->
                     <div class="flex items-center justify-between p-4 border-b rounded-t">
                         <h3 class="text-xl font-semibold text-gray-900">
-                            Add Review
+                            Review
                         </h3>
                         <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" id="closeModalBtn">
                             <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -57,13 +58,15 @@
                             <h2 class="product-name text-2xl font-semibold"></h2>
                         </div>
                         <form id="ReviewEntryForm">
+                            {% csrf_token %}
+                            <input type="hidden" id="product-id" name="product_id">
                             <div class="mb-4">
                                 <label for="rating" class="block text-sm font-medium text-gray-700">Rate</label>
-                                <input type="number" id="rating" name="rating" min="1" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" required>
+                                <input type="number" id="rating" name="rating" min="1" max="5" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" required>
                             </div>
                             <div class="mb-4">
-                                <label for="review" class="block text-sm font-medium text-gray-700">Review</label>
-                                <textarea id="review" name="review" rows="3" class="mt-1 block w-full h-52 resize-none border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Describe your experience!" required></textarea>
+                                <label for="review_message" class="block text-sm font-medium text-gray-700">Review</label>
+                                <textarea id="review_message" name="review_message" rows="3" class="mt-1 block w-full h-52 resize-none border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Describe your experience!" required></textarea>
                             </div>
                         </form>
                     </div>
@@ -82,61 +85,71 @@
 
     <!-- Script untuk AJAX dan modal -->
     <script>
-    function showModal(button) {
-        const productName = button.getAttribute('data-product-name');
-        const productImage = button.getAttribute('data-product-image');
-
-        document.querySelector('#crudModal .product-name').textContent = productName;
-        document.querySelector('#crudModal .product-image').setAttribute('src', productImage);
-        document.querySelector('#crudModal .product-image').setAttribute('alt', productName);
-
-        const modal = document.getElementById('crudModal');
-        const modalContent = document.getElementById('crudModalContent');
-
-        modal.classList.remove('hidden');
-        setTimeout(() => {
-            modalContent.classList.remove('opacity-0', 'scale-95');
-            modalContent.classList.add('opacity-100', 'scale-100');
-        }, 50);
-    }
-
-    function hideModal() {
-        const modal = document.getElementById('crudModal');
-        const modalContent = document.getElementById('crudModalContent');
-
-        modalContent.classList.remove('opacity-100', 'scale-100');
-        modalContent.classList.add('opacity-0', 'scale-95');
-
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 150);
-    }
-
-    document.getElementById("cancelButton").addEventListener("click", hideModal);
-    document.getElementById("closeModalBtn").addEventListener("click", hideModal);
-
-    document.getElementById("ReviewEntryForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        addReviewEntry();
-    });
-
-    function addReviewEntry() {
-        fetch("{% url 'review:add_review_entry_ajax' %}", {
-            method: "POST",
-            body: new FormData(document.querySelector('#ReviewEntryForm')),
-        })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = "{% url 'review:show_main' %}";
-            }
-        })
-        .catch(error => console.log('Error:', error));
-
-        document.getElementById("ReviewEntryForm").reset();
-        hideModal();
-
-        return false;
-    }
-    </script>
+        function showModal(button) {
+            const productId = button.getAttribute('data-product-id');
+            const productName = button.getAttribute('data-product-name');
+            const productImage = button.getAttribute('data-product-image');
+    
+            document.querySelector('#crudModal .product-name').textContent = productName;
+            document.querySelector('#crudModal .product-image').setAttribute('src', productImage);
+            document.querySelector('#crudModal .product-image').setAttribute('alt', productName);
+            document.querySelector('#product-id').value = productId;
+    
+            const modal = document.getElementById('crudModal');
+            const modalContent = document.getElementById('crudModalContent');
+    
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('opacity-0', 'scale-95');
+                modalContent.classList.add('opacity-100', 'scale-100');
+            }, 50);
+        }
+    
+        function hideModal() {
+            const modal = document.getElementById('crudModal');
+            const modalContent = document.getElementById('crudModalContent');
+    
+            modalContent.classList.remove('opacity-100', 'scale-100');
+            modalContent.classList.add('opacity-0', 'scale-95');
+    
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+    
+        document.getElementById("cancelButton").addEventListener("click", hideModal);
+        document.getElementById("closeModalBtn").addEventListener("click", hideModal);
+    
+        document.getElementById("ReviewEntryForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            addReviewEntry();
+        });
+    
+        function addReviewEntry() {
+            const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+            const formData = new FormData(document.querySelector('#ReviewEntryForm'));
+    
+            fetch("{% url 'review:add_review_entry_ajax' %}", {
+                method: "POST",
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                },
+                body: formData,
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "{% url 'review:show_main' %}";
+                } else {
+                    console.log('Failed to submit review');
+                }
+            })
+            .catch(error => console.log('Error:', error));
+    
+            document.getElementById("ReviewEntryForm").reset();
+            hideModal();
+    
+            return false;
+        }
+    </script>    
 </div>
 {% endblock content %}
