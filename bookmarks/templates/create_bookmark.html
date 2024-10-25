@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Create Bookmark | BaLink</title>
+{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<!-- Main Section -->
+<div class="bg-white min-h-screen py-12">
+  <div class="container mx-auto px-6 lg:px-8">
+    <!-- Title Section -->
+    <div class="text-center mb-10">
+      <h2 class="text-4xl font-bold tracking-tight text-blue-600">Create a Bookmark</h2>
+      <p class="text-gray-500 mt-2">Search and select a product to bookmark, then add details like priority and reminder</p>
+    </div>
+
+    <!-- Product Search Section -->
+    <div class="mb-8">
+      <div class="relative">
+        <input type="search" id="search-product" name="query" class="search-product block w-full p-4 pl-10 text-sm border rounded-lg bg-yellow-600 border-gray-600 placeholder-gray-200 text-white" placeholder="Search Products...">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Grid Section -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" id="product-grid">
+      <!-- This is where the search results will appear (using JavaScript to fill it dynamically) -->
+    </div>
+
+    <!-- Bookmark Form (Initially hidden, appears after selecting a product) -->
+    <div id="bookmark-form" class="hidden max-w-lg mx-auto bg-gray-100 rounded-lg shadow-lg p-8 mt-10">
+      <form id="createBookmarkForm" method="POST" action="{% url 'bookmarks:create_bookmark' %}">
+        {% csrf_token %}
+
+        <!-- Hidden Product ID (populated when a product is selected) -->
+        <input type="hidden" id="product_id" name="product_id">
+
+        <!-- Note Field -->
+        <div class="mb-6">
+          <label for="note" class="block mb-2 text-sm font-medium text-gray-700">Note</label>
+          <textarea name="note" id="note" class="w-full border border-gray-300 rounded-lg p-2.5" rows="4" placeholder="Add a note for your bookmark"></textarea>
+        </div>
+
+        <!-- Priority Field -->
+        <div class="mb-6">
+          <label for="priority" class="block mb-2 text-sm font-medium text-gray-700">Priority</label>
+          <select name="priority" id="priority" class="w-full border border-gray-300 rounded-lg p-2.5">
+            <option value="H">High</option>
+            <option value="M" selected>Medium</option>
+            <option value="L">Low</option>
+          </select>
+        </div>
+
+        <!-- Reminder Field -->
+        <div class="mb-6">
+          <label for="reminder" class="block mb-2 text-sm font-medium text-gray-700">Reminder Date</label>
+          <input type="date" name="reminder" id="reminder" class="w-full border border-gray-300 rounded-lg p-2.5">
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button type="submit" class="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition">Add Bookmark</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // JavaScript to handle product selection and displaying the form
+  document.getElementById('search-product').addEventListener('input', function() {
+    const query = this.value;
+    const grid = document.getElementById('product-grid');
+    
+    // Dummy products for now - you will use your actual products from the database
+    const products = [
+      { id: 1, name: 'Product 1', description: 'This is the description of Product 1.' },
+      { id: 2, name: 'Product 2', description: 'This is the description of Product 2.' },
+      { id: 3, name: 'Product 3', description: 'This is the description of Product 3.' }
+    ];
+
+    // Filter products based on the search query
+    const filteredProducts = products.filter(product => product.name.toLowerCase().includes(query.toLowerCase()));
+
+    // Clear the grid
+    grid.innerHTML = '';
+
+    // Render filtered products
+    filteredProducts.forEach(product => {
+      const productElement = document.createElement('div');
+      productElement.classList.add('bg-white', 'rounded-lg', 'shadow-lg', 'p-5', 'hover:bg-gray-100', 'cursor-pointer');
+      productElement.innerHTML = `
+        <h3 class="text-xl font-bold text-gray-800">${product.name}</h3>
+        <p class="text-gray-500">${product.description}</p>
+        <button class="mt-4 bg-yellow-500 hover:bg-yellow-400 text-white py-2 px-4 rounded">Select</button>
+      `;
+
+      // Add event listener to handle product selection
+      productElement.querySelector('button').addEventListener('click', function() {
+        document.getElementById('product_id').value = product.id;
+        document.getElementById('bookmark-form').classList.remove('hidden'); // Show the form
+      });
+
+      grid.appendChild(productElement);
+    });
+  });
+</script>
+
+<script src="{% static 'js/balink.js' %}"></script>
+{% endblock %}
