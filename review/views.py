@@ -59,7 +59,7 @@ def add_review_entry_ajax(request):
 def delete_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
     
-    if request.user.userprofile.user_privilege == "admin":
+    if request.user.userprofile.privilege == "admin":
         review.delete()
     
     return redirect('review:show_main')

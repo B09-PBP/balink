@@ -28,21 +28,23 @@
     <div class="review-list grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {% for review in reviews %}
         <div class="review-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl flex flex-col relative">
-            <div class="relative">
+            <a href="{% url 'product:show_product_detail' review.ride.id %}" class="absolute inset-0 z-20"></a>
+            
+            <div class="relative z-10">
                 <img src="{{ review.ride.image_url }}" alt="{{ review.ride.name }}" class="w-full h-36 object-cover" />
                 <div class="absolute top-4 right-4 bg-white text-gray-900 px-3 py-1 rounded-full font-bold text-x shadow">
                     ⭐ {{ review.rating }}
                 </div>                
             </div>
-            <div class="review-info p-4 flex-grow text-left">
+            <div class="review-info p-4 flex-grow text-left z-10">
                 <h2 class="review-name text-1xl font-bold">{{ review.ride.name }}</h2>
                 <p class="text-gray-500 text-x leading-relaxed">{{ review.review_message }}</p>
             </div>
-            <p class="text-sm text-gray-400 p-4">Reviewed by {{ review.user.username }}</p>
+            <p class="text-sm text-gray-400 p-4 z-10">Reviewed by {{ review.user.username }}</p>
 
             <!-- Kalau admin bisa delete -->
-            {% if user.is_authenticated and user.userprofile.user_privilege == "admin" %}
-            <form action="{% url 'review:delete_review' review.id %}" method="post" class="absolute bottom-4 right-4">
+            {% if user.is_authenticated and user.userprofile.privilege == "admin" %}
+            <form action="{% url 'review:delete_review' review.id %}" method="post" class="absolute bottom-4 right-4 z-30">
                 {% csrf_token %}
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-1.5 transition duration-300 shadow-md">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
