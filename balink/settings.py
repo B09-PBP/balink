@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'landing_page',
     'authentication',
     'product',
-    'bookmarks',
     'cart',
 ]
 
@@ -135,4 +134,3 @@ else:
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-

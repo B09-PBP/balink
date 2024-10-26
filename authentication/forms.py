@@ -4,7 +4,7 @@ from authentication.models import UserProfile
 from django.contrib.auth.models import User
 
 class RegisterForm(UserCreationForm):
-    privilege = forms.ChoiceField(
+    user_privelege = forms.ChoiceField(
         choices = (("admin", "Admin"), ("customer", "Customer")),
         label="Choose your user privelege",
         required=True
@@ -13,7 +13,7 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("privilege", "username", "name")
+        fields = ("user_privelege", "username", "name")
 
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
@@ -22,6 +22,6 @@ class RegisterForm(UserCreationForm):
         UserProfile.objects.create(
             user = user,
             name = self.cleaned_data["name"],
-            privilege = self.cleaned_data["privilege"]
+            user_privelege = self.cleaned_data["user_privelege"]
         )
         return user
