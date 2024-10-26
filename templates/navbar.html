@@ -1,4 +1,5 @@
 {% load static %}
+
 <!-- Navbar -->
 <nav class="bg-white border-b border-gray-200 px-4 sm:px-8 py-4 shadow-lg">
   <div class="container flex flex-wrap justify-between items-center mx-auto">
@@ -34,29 +35,43 @@
           <a href="/product/" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Products</a>
         </li>
         <li>
-          <a href="#" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Services</a>
+          <a href="/review/" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Review</a>
         </li>
         <li>
-          <a href="#" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Contact</a>
+          <a href="/bookmark/" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Bookmark</a>
         </li>
         <li>
-          <a href="#" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Blog</a>
+          <a href="/cart/" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Cart</a>
+        </li>
+        <li>
+          <a href="/article/" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Article</a>
         </li>
       </ul>
 
-      <!--login and register button-->
+      <!-- User Authentication Section -->
       <div class="ml-12">
         <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-          <li>
-            <a href="/auth/register">
-              <button class="block py-2 px-4 text-black bg-yellow-400 hover:bg-yellow-500 rounded-md">Register</button>
-            </a>
-          </li>
-          <li>
-            <a href="/auth/login">
-              <button class="block py-2 px-4 text-white bg-blue-600 hover:bg-blue-700 rounded-md">Login</button>
-            </a>
-          </li>
+          {% if user.is_authenticated %}
+            <li>
+              <span class="block py-2 px-3 text-gray-700">Welcome, {{ user.username }}</span>
+            </li>
+            <li>
+              <a href="/auth/logout">
+                <button class="block py-2 px-4 text-white bg-red-600 hover:bg-red-700 rounded-md">Logout</button>
+              </a>
+            </li>
+          {% else %}
+            <li>
+              <a href="/auth/register">
+                <button class="block py-2 px-4 text-black bg-yellow-400 hover:bg-yellow-500 rounded-md">Register</button>
+              </a>
+            </li>
+            <li>
+              <a href="/auth/login">
+                <button class="block py-2 px-4 text-white bg-blue-600 hover:bg-blue-700 rounded-md">Login</button>
+              </a>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>

@@ -13,26 +13,34 @@ from django.contrib.auth.decorators import login_required
 from authentication.models import UserProfile
 from product.models import Product
 from django.shortcuts import get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 
 @csrf_exempt
 @login_required(login_url="authentication:login_user")
 def show_cart(request):
     user = request.user
-    
+
     # Cek apakah user memiliki UserProfile, jika tidak buat
     if not hasattr(user, 'userprofile'):
-        UserProfile.objects.create(user=user)  # Ini membuat UserProfile, bukan User
+        UserProfile.objects.create(user=user)
 
     cart = user.userprofile.cart.all()
+
+    # Hitung jumlah kendaraan di cart (total rides)
+    total_items = cart.count()
+
+    # Hitung total harga kendaraan di cart
+    total_price = sum([car.price for car in cart])
+
     form = CheckoutForm(request.POST or None)
 
     if form.is_valid() and request.method == 'POST':
         history = form.save(commit=False)
         history.user = request.user
-        
+
         form.save()
 
-        for car in request.user.userprofile.cart.all():
+        for car in cart:
             history.buku.add(car)
             request.user.userprofile.owned_cars.add(car)
             request.user.userprofile.cart.remove(car)
@@ -42,28 +50,11 @@ def show_cart(request):
     context = {
         "cart": cart,
         "form": form,
+        "total_items": total_items,  # Tambahkan total rides ke context
+        "total_price": total_price,  # Tambahkan total harga ke context
     }
 
     return render(request, 'cart.html', context)
-
-@login_required(login_url="authentication:login")
-def checkout_cart_ajax(request):
-    form = CheckoutForm(request.POST or None)
-
-    if form.is_valid() and request.method == 'POST':
-        history = form.save(commit=False)
-        history.user = request.user
-        
-        form.save()
-
-        for car in request.user.userprofile.cart.all():
-            history.buku.add(car)
-            request.user.userprofile.owned_cars.add(car)
-            request.user.userprofile.cart.remove(car)
-
-        return HttpResponse(b"OK", status=200)
-    
-    return render(request, "cart.html", {"form": form})    
 
 @login_required
 def add_to_cart(request, product_id):
@@ -71,7 +62,31 @@ def add_to_cart(request, product_id):
     user_profile = request.user.userprofile  # Ambil UserProfile yang sesuai
     user_profile.cart.add(product)  # Tambahkan produk ke cart user
 
-    return redirect('cart:show_cart')     
+    return redirect('cart:show_cart') 
+
+@csrf_exempt
+@require_POST
+@login_required(login_url="authentication:login")
+def booking_cart_ajax(request):
+    form = CheckoutForm(request.POST)
+
+    if form.is_valid():
+        history = form.save(commit=False)
+        history.user = request.user
+        history.save()  # Save the history entry first
+
+        # Transfer items from the user's cart to the order history
+        cart_items = request.user.userprofile.cart.all()
+        
+        for product in cart_items:
+            history.car.add(product)  # Add each product to the history entry
+            request.user.userprofile.cart.remove(product)  # Remove from the user's cart
+
+        return JsonResponse({'status': 'success', 'message': 'Booking successful!'})
+
+    # If form is invalid, return an error response
+    return JsonResponse({'status': 'error', 'message': 'Booking failed. Please check your form data.'})
+    
 
 def get_cart_json(request):
     cart = request.user.userprofile.cart.all()
@@ -82,25 +97,6 @@ def get_cart_json_by_user_id(request, id):
     cart = user.userprofile.cart.all()
 
     return HttpResponse(serializers.serialize('json', cart), content_type="application/json")
-
-@login_required(login_url="authentication:login")
-def booking_cart(request):
-    form = CheckoutForm(request.POST or None)
-
-    if form.is_valid() and request.method == 'POST':
-        history = form.save(commit=False)
-        history.user = request.user
-        
-        form.save()
-
-        for car in request.user.userprofile.cart.all():
-            history.car.add(car)
-            request.user.userprofile.owned_cars.add(car)
-            request.user.userprofile.cart.remove(car)
-
-        return HttpResponseRedirect(reverse('cart:show_cart'))
-    
-    return render(request, "booking.html", {"form": form})
 
 @login_required(login_url="authentication:login")
 def show_history(request):
@@ -117,31 +113,12 @@ def get_history_json(request):
 
     return HttpResponse(serializers.serialize('json', history), content_type="application/json")
 
-@login_required(login_url="authentication:login")
-def show_owned(request):
-    owned = request.user.userprofile.owned_cars.all()
-
-    context = {
-        "owned": owned,
-    }
-
-    return render(request, "display_owned.html", context)
-
 def remove_car_from_cart(request, car_id):
     car = request.user.userprofile.cart.get(id=car_id)
 
     request.user.userprofile.cart.remove(car)
 
     return HttpResponseRedirect(reverse('cart:show_cart'))
-
-@csrf_exempt
-def remove_car_from_cart_flutter(request, user_id, car_id):
-    user = User.objects.filter(id=user_id)[0]
-    car = user.userprofile.cart.get(id=car_id)
-
-    user.userprofile.cart.remove(car)
-
-    return JsonResponse({"status": "success"}, status=200)
 
 @csrf_exempt
 def remove_car_from_cart_ajax(request, id):

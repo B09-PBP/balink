@@ -1,29 +1,35 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-<title>Register</title>
+<title>Balink | Register</title>
 {% endblock meta %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full bg-gray-800 rounded-lg shadow-lg p-8 space-y-6">
-    <h2 class="text-center text-3xl font-extrabold text-yellow-400">
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8 space-y-6">
+    <h2 class="text-center text-3xl font-extrabold text-blue-600">
       Create Your Account
     </h2>
+    
     <form class="mt-8 space-y-6" method="POST">
       {% csrf_token %}
-      <input type="hidden" name="remember" value="true">
       
       <div class="space-y-4">
         {% for field in form %}
           <div>
-            <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-white">{{ field.label }}</label>
+            <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-700">{{ field.label }}</label>
             <div class="relative">
               {% if field.field.widget.input_type == 'textarea' %}
-                <textarea id="{{ field.id_for_label }}" name="{{ field.name }}" rows="4" class="block w-full rounded-lg border border-yellow-300 placeholder-gray-400 text-gray-900 focus:ring focus:ring-yellow-500 focus:border-yellow-500 p-3 transition duration-200 ease-in-out" placeholder="{{ field.label }}">{{ field.value|default:'' }}</textarea>
-              {% else %}
-                <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" name="{{ field.name }}" class="block w-full rounded-lg border border-yellow-300 placeholder-gray-400 text-gray-900 focus:ring focus:ring-yellow-500 focus:border-yellow-500 p-3 transition duration-200 ease-in-out" placeholder="{{ field.label }}" value="{{ field.value|default:'' }}">
-              {% endif %}
+              <textarea id="{{ field.id_for_label }}" name="{{ field.name }}" rows="4" class="block w-full rounded-lg border border-gray-300 placeholder-gray-400 text-gray-900 focus:ring focus:ring-blue-500 focus:border-blue-500 p-3 transition duration-200 ease-in-out" placeholder="{{ field.label }}">{{ field.value|default:'' }}</textarea>
+            {% elif field.field.widget.input_type == 'select' %}
+              <select id="{{ field.id_for_label }}" name="{{ field.name }}" class="block w-full rounded-lg border border-gray-300 placeholder-gray-400 text-gray-900 focus:ring focus:ring-blue-500 focus:border-blue-500 p-3 transition duration-200 ease-in-out">
+                {% for choice in field.field.choices %}
+                  <option value="{{ choice.0 }}" {% if choice.0 == field.value %}selected{% endif %}>{{ choice.1 }}</option>
+                {% endfor %}
+              </select>
+            {% else %}
+              <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" name="{{ field.name }}" class="block w-full rounded-lg border border-gray-300 placeholder-gray-400 text-gray-900 focus:ring focus:ring-blue-500 focus:border-blue-500 p-3 transition duration-200 ease-in-out" placeholder="{{ field.label }}" value="{{ field.value|default:'' }}">
+            {% endif %}
               <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                 {% if field.errors %}
                   <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
@@ -39,10 +45,10 @@
             {% endif %}
           </div>
         {% endfor %}
-      </div>      
+      </div>
 
       <div>
-        <button type="submit" class="w-full flex justify-center py-2 px-4 text-sm font-medium rounded-md text-white bg-gradient-to-r from-yellow-400 to-yellow-500 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200 ease-in-out">
+        <button type="submit" class="w-full flex justify-center py-2 px-4 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 transition duration-300 shadow cursor-pointer">
           Register
         </button>
       </div>
@@ -59,9 +65,9 @@
     {% endif %}
 
     <div class="text-center mt-4">
-      <p class="text-sm text-gray-100">
+      <p class="text-sm text-gray-600">
         Already have an account?
-        <a href="{% url 'authentication:login_user' %}" class="font-medium text-yellow-500 hover:text-yellow-400">
+        <a href="{% url 'authentication:login' %}" class="font-medium text-blue-600 hover:text-blue-500">
           Login here
         </a>
       </p>

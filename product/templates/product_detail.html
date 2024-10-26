@@ -1,0 +1,135 @@
+{% extends 'base.html' %} {% load static %} {% block content %} {% include 'navbar.html' %}
+
+<title>Balink | Product Detail</title>
+<title>Balink | Product Detail</title>
+<div class="container mx-auto mt-10 flex flex-col md:flex-row">
+  <!-- Main Product Detail Section -->
+  <div class="w-full md:w-2/3 p-6 bg-white rounded-lg shadow-lg transition-transform hover:scale-105">
+    <h2 class="text-lg font-bold mb-4 text-gray-800">Product Details</h2>
+    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg mb-4 shadow-md transition-shadow hover:shadow-lg" />
+
+    <h3 class="text-3xl font-semibold text-gray-800 mb-2">{{ product.name }}</h3>
+    <p class="text-gray-600 mb-2">Year: <span class="font-semibold">{{ product.year }}</span></p>
+    <p class="text-gray-800 font-bold text-2xl">Price: <span class="text-blue-600">Rp.{{ product.price }}/day</span></p>
+    <p class="text-gray-600">KM Driven: <span class="font-semibold">{{ product.km_driven }}</span></p>
+
+    <!-- Dealer Contact Section -->
+    <h4 class="text-lg font-semibold text-gray-800 mb-2 mt-6">Dealer Contact</h4>
+    <p class="text-gray-600">Dealer: <span class="font-semibold">{{ product.dealer }}</span></p>
+
+    <!-- Dealer Contact Section -->
+    <h4 class="text-lg font-semibold text-gray-800 mb-2 mt-6">Dealer Contact</h4>
+
+    {% if product.dealer == "Bali Bija Car Rental" %}
+    <p class="text-gray-600">Dealer: <span class="font-semibold">{{ product.dealer }}</span></p>
+    <div class="mb-4">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d31554.223423160438!2d115.1447386!3d-8.6650967!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd2477469b8eb35%3A0x34940e0eb84fbe02!2sBali%20Bija%20Car%20Rental!5e0!3m2!1sid!2sid!4v1729697509220!5m2!1sid!2sid"
+        width="600"
+        height="400"
+        style="border: 0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+
+    {% elif product.dealer == "Santika Bali Rental" %}
+    <p class="text-gray-600">Dealer: <span class="font-semibold">{{ product.dealer }}</span></p>
+    <div class="mb-4">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d63103.6160896639!2d115.1630117!3d-8.6938281!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd2473506e8c93f%3A0x78aafaaebf34d6f6!2sSantika%20Bali%20Rental%20-%20Sewa%20Mobil%20Murah!5e0!3m2!1sid!2sid!4v1729698765824!5m2!1sid!2sid"
+        width="600"
+        height="400"
+        style="border: 0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+
+    {% elif product.dealer == "Garuda Bali Transport " %}
+    <p class="text-gray-600">Dealer: <span class="font-semibold">{{ product.dealer }}</span></p>
+    <div class="mb-4">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d63104.42181840456!2d115.1517113!3d-8.6890425!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd24121a806e0a3%3A0xf3ccd55a64f8e452!2sGaruda%20Bali%20Transport%20(sewa%20mobil%20murah%20di%20bali)!5e0!3m2!1sid!2sid!4v1729698816249!5m2!1sid!2sid"
+        width="600"
+        height="400"
+        style="border: 0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+
+    {% elif product.dealer == "MJ TRANS TOUR & RENTAL " %}
+    <p class="text-gray-600">Dealer: <span class="font-semibold">{{ product.dealer }}</span></p>
+    <div class="mb-4">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d63106.52879499251!2d115.1605816!3d-8.6765158!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd241b145ede493%3A0xca8f5e19321b9d2c!2sMJ%20TRANS%20TOUR%20%26%20RENTAL!5e0!3m2!1sid!2sid!4v1729698835700!5m2!1sid!2sid"
+        width="600"
+        height="400"
+        style="border: 0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+
+    {% elif product.dealer == "Denpasar Transport" %}
+    <p class="text-gray-600">Dealer: <span class="font-semibold">{{ product.dealer }}</span></p>
+    <div class="mb-4">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d63107.52847111995!2d115.1121795!3d-8.6705661!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd245dd5c6664b3%3A0x3d2913491897964e!2sDenpasar%20Transport!5e0!3m2!1sid!2sid!4v1729698698671!5m2!1sid!2sid"
+        width="600"
+        height="400"
+        style="border: 0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+
+    {% else %}
+    <p class="text-gray-600">Dealer contact information is not available.</p>
+    {% endif %}
+
+    <form method="POST" action="{% url 'cart:add_to_cart' product.id %}">
+      {% csrf_token %}
+      <button type="submit" class="rent-button w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:opacity-80 transition mt-4 transform hover:scale-105">
+          Rent Now
+      </button>
+    </form>
+    <a href="{% url 'product:show_product_page' %}" class="w-full bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition text-center block mt-2">Back to Products</a>
+  </div>
+
+  <!-- Recommended Products Section -->
+  <div class="w-full md:w-1/3 ml-6">
+    <div class="relative bg-gradient-to-r from-blue-700 to-blue-500 rounded-xl overflow-hidden shadow-lg mb-6 p-6">
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-white">You May Also Like</h2>
+      <div class="product-list mb-8">
+        {% for related_product in related_products %}
+        <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl border border-gray-200 mb-8">
+          <div class="relative">
+            {% if related_product.is_new %}
+            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold py-1 px-2 rounded-full">New</span>
+            {% endif %}
+            <img src="{{ related_product.image_url }}" alt="{{ related_product.name }}" class="product-image w-full h-48 object-cover shadow-md transition-shadow hover:shadow-lg" />
+          </div>
+          <div class="product-info p-4">
+            <h2 class="product-name text-lg font-semibold text-gray-800 hover:text-blue-600 transition">{{ related_product.name }}</h2>
+            <p class="product-price text-gray-800 font-bold text-xl">Price: <span class="text-blue-600">Rp.{{ related_product.price }}/day</span></p>
+          </div>
+          <div class="card-footer p-4">
+            <a href="{% url 'product:show_product_detail' related_product.id %}" class="rent-button bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:opacity-80 transition">View Detail</a>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-gray-600">No related products available at this time.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

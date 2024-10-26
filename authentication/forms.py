@@ -4,12 +4,16 @@ from authentication.models import UserProfile
 from django.contrib.auth.models import User
 
 class RegisterForm(UserCreationForm):
-    email = forms.EmailField(label = "Email", required=True)
-    full_name = forms.CharField(label = "Name", required=True)
+    user_privelege = forms.ChoiceField(
+        choices = (("admin", "Admin"), ("customer", "Customer")),
+        label="Choose your user privelege",
+        required=True
+    )
+    name = forms.CharField(label = "Full Name", required=True)
 
     class Meta:
         model = User
-        fields = ("username", "full_name","email","password", "password_second")
+        fields = ("user_privelege", "username", "name")
 
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
@@ -17,7 +21,7 @@ class RegisterForm(UserCreationForm):
             user.save()
         UserProfile.objects.create(
             user = user,
-            full_name = self.cleaned_data["full_name"],
-            user_type = self.cleaned_data["user_type"]
+            name = self.cleaned_data["name"],
+            user_privelege = self.cleaned_data["user_privelege"]
         )
         return user

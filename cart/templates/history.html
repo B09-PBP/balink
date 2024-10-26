@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block meta %}
+<title>Order History | BaLink</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="container mx-auto mt-10 p-5">
+
+    <div class="text-center mb-10">
+        <h1 class="text-3xl font-bold text-blue-600">My Orders  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 inline ml-3 mb-1">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+        </svg> 
+        </h1>
+    </div>
+
+    <hr class="w-1/2 mx-auto mb-10">
+
+    {% if history %}
+    {% for item in history reversed %}
+    <div class="bg-blue-100 rounded-lg p-6 mb-8 mx-auto" style="max-width: 700px;">
+        <div class="flex justify-between mb-4">
+            <div>
+                <h2 class="text-xl font-bold text-blue-700">ORDER FINISHED</h2>
+                <p>{{ item.name }}</p>
+            </div>
+            <div>
+                <p class="mb-2"><strong>Address:</strong> {{ item.address }}</p>
+                <p><strong>Order Date:</strong> {{ item.date }}</p>
+            </div>
+        </div>
+
+        <hr class="my-4 border-t border-gray-300">
+
+        <div>
+            <h3 class="text-lg font-bold text-blue-600 mb-2">Cars Ordered:</h3>
+            <ul>
+                {% for car in item.car.all %}
+                <li class="flex items-center mb-4">
+                    <img src="{{ car.image_url }}" alt="{{ car.name }}" class="w-20 h-18 object-cover rounded-lg mr-2">
+                    <p class="text-lg" style="margin-left: 15px;">{{ car.name }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="text-center text-gray-600">You have no order history.</p>
+    {% endif %}
+</div>
+{% endblock content %}
