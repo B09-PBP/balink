@@ -1,0 +1,97 @@
+{% extends 'base.html' %} {% load static %} {% block content %} {% include 'navbar.html' %}
+
+<div class="container mx-auto mt-8">
+    <!-- Display Article Details -->
+    <div class="bg-white p-6 rounded-md shadow-md mb-8">
+        <h1 class="text-3xl font-bold mb-4 text-gray-800">{{ article.title }}</h1>
+        <img src="{{ article.image }}" alt="{{ article.title }}" class="w-full h-[600px] object-cover rounded-md mb-4">
+        <p class="text-gray-600 mb-8">{{ article.content }}</p>
+    </div>
+
+    <!-- Section for Comments -->
+    <div class="mt-8">
+        <h2 class="text-2xl font-semibold mb-4">Comments</h2>
+        <div id="comments-section">
+            {% for comment in article.comments %}
+                <div class="bg-gray-100 p-4 rounded-md mb-2">
+                    <p class="font-semibold">{{ comment.user }}</p>
+                    <p>{{ comment.content }}</p>
+                    <p class="text-gray-400 text-sm">{{ comment.timestamp }}</p>
+                </div>
+            {% empty %}
+                <p class="text-gray-600">No comments yet. Be the first to comment!</p>
+            {% endfor %}
+        </div>
+        <div class="mt-4">
+            <button id="addCommentBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Add Comment</button>
+        </div>
+    </div>
+</div>
+
+<!-- Comment Modal -->
+<div id="commentModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-md shadow-md w-96">
+        <h3 class="text-xl font-bold mb-4">Write Your Comment</h3>
+        <textarea id="commentText" class="w-full p-3 border rounded mb-4 h-40 resize-none" placeholder="Write your comment..."></textarea>
+        <button id="submitCommentBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
+        <button id="closeModalBtn" class="bg-gray-500 text-white px-4 py-2 rounded ml-2">Close</button>
+    </div>
+</div>
+
+<script>
+    // Handle the display of the modal for adding comments
+    document.getElementById("addCommentBtn").addEventListener("click", function() {
+        document.getElementById("commentModal").classList.remove("hidden");
+    });
+
+    // Handle the closing of the modal
+    document.getElementById("closeModalBtn").addEventListener("click", function() {
+        document.getElementById("commentModal").classList.add("hidden");
+    });
+
+    // Handle submitting the comment using AJAX
+    document.getElementById("submitCommentBtn").addEventListener("click", function() {
+        const commentText = document.getElementById("commentText").value;
+        const articleId = "{{ article.id }}";
+
+        // Ensure the comment text is not empty
+        if (!commentText.trim()) {
+            alert("Comment cannot be empty!");
+            return;
+        }
+
+        fetch(`/article/${articleId}/add_comment/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ comment_text: commentText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Construct the HTML for the new comment
+                const newComment = `
+                    <div class="bg-gray-100 p-4 rounded-md mb-2">
+                        <p class="font-semibold">${data.user}</p>
+                        <p>${data.comment}</p>
+                        <p class="text-gray-400 text-sm">Just now</p>
+                    </div>
+                `;
+                // Insert the new comment into the comments section
+                document.getElementById("comments-section").insertAdjacentHTML('beforeend', newComment);
+                // Hide the modal and reset the textarea
+                document.getElementById("commentModal").classList.add("hidden");
+                document.getElementById("commentText").value = "";
+            } else {
+                alert("Failed to add comment: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    });
+</script>
+
+{% endblock content %}
