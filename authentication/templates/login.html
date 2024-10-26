@@ -1,17 +1,11 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block meta %}
-<title>Balink | Login</title>
-{% endblock meta %}
+{% extends 'base.html' %} {% block meta %}
+<title>Login</title>
+{% endblock meta %} {% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-6">
+  <div class="bg-white shadow-md rounded-lg px-8 py-6 w-full max-w-md">
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Car Rental Login</h1>
 
-{% block content %}
-<div class="flex min-h-screen bg-gray-100">
-
-  <!-- Left Section: Login Form -->
-  <div class="w-full max-w-md m-auto p-8 bg-white rounded-lg shadow-lg">
-    <h1 class="text-4xl font-extrabold text-center text-blue-600 mb-8">Welcome<span class="text-yellow-400"> Back!</span></h1>
-
-    <form method="POST" action="">
+    <form method="POST" action="{% url 'authentication:login' %}">
       {% csrf_token %}
       <div class="space-y-6">
         <div class="space-y-4">
@@ -31,11 +25,7 @@
           />
         </div>
         <div>
-          <input 
-            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-500 transition duration-300 cursor-pointer" 
-            type="submit" 
-            value="Login" 
-          />
+          <input class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300 cursor-pointer" type="submit" value="Login" />
         </div>
       </div>
     </form>
@@ -51,15 +41,10 @@
     {% endif %}
   </div>
 
-  <!-- Right Section: Color Block -->
-  <div class="hidden lg:flex items-center justify-center w-1/2 bg-gradient-to-br from-blue-500 to-blue-700 text-white">
-    <div class="text-center p-8">
-      <h2 class="text-5xl font-bold text-yellow-400">New Here?</h2>
-      <p class="mt-4 text-lg">Experience connectivity and endless opportunities with BaLink. <br> Let’s get you started!</p> <br>
-      <a href="{% url 'authentication:register' %}" class="text-blue-600 hover:underline font-semibold">
-        <button class="bg-yellow-400 text-black py-2 px-4 rounded-lg shadow hover:bg-yellow-500 transition duration-300 cursor-pointer">Register Now</button>
-      </a>
-    </div>
+    <p class="text-gray-600 text-center mt-6">
+      Don't have an account yet?
+      <a href="{% url 'authentication:register' %}" class="text-blue-600 hover:underline">Register Now</a>
+    </p>
   </div>
   
 </div>
