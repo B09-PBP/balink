@@ -56,7 +56,7 @@ def show_product_page(request):
     return render(request, "product_page.html", {
         "products": products,
         "search_query": search_query,
-        "user": user_profile,
+        "user": UserProfile,
     })
 
 def show_product_detail(request, id):
