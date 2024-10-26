@@ -13,7 +13,6 @@ urlpatterns = [
     path("remove/<uuid:car_id>", remove_car_from_cart, name="remove"),
     path("remove-car/<uuid:id>", remove_car_from_cart_ajax, name="remove_car_from_cart_ajax"),
     path('booking-cart-ajax/', booking_cart_ajax, name='booking_cart_ajax'),
-    path("get-history/", get_history_json, name="get_history_json"),
-    path("get-cart/", get_cart_json, name='get_cart_json'),
-    path("get-cart-id/<int:id>", get_cart_json_by_user_id, name="get_cart_json_by_user_id"),
+    path('json/', show_json, name='show_json'),
+    path('json/<str:id>/', show_json_by_id, name='show_json_by_id'),
 ]

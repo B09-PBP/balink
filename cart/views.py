@@ -1,12 +1,9 @@
-import json
 from django.shortcuts import render
 from django.contrib.auth.models import User
-import authentication
 from .forms import CheckoutForm
 from .models import History
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
-import datetime
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -86,17 +83,6 @@ def booking_cart_ajax(request):
 
     # If form is invalid, return an error response
     return JsonResponse({'status': 'error', 'message': 'Booking failed. Please check your form data.'})
-    
-
-def get_cart_json(request):
-    cart = request.user.userprofile.cart.all()
-    return HttpResponse(serializers.serialize('json', cart), content_type="application/json")
-
-def get_cart_json_by_user_id(request, id):
-    user = User.objects.filter(id=id)[0]
-    cart = user.userprofile.cart.all()
-
-    return HttpResponse(serializers.serialize('json', cart), content_type="application/json")
 
 @login_required(login_url="authentication:login")
 def show_history(request):
@@ -107,11 +93,6 @@ def show_history(request):
     }
 
     return render(request, "history.html", context)
-
-def get_history_json(request):
-    history = History.objects.all()
-
-    return HttpResponse(serializers.serialize('json', history), content_type="application/json")
 
 def remove_car_from_cart(request, car_id):
     car = request.user.userprofile.cart.get(id=car_id)
@@ -130,3 +111,12 @@ def remove_car_from_cart_ajax(request, id):
         return HttpResponse(b"OK", status = 200)
     
     return HttpResponseNotFound()
+
+
+def show_json(request):
+    data = History.objects.all()  # Use the correct model here
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def show_json_by_id(request, id):
+    data = History.objects.filter(pk=id)  # Use the correct model here
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
