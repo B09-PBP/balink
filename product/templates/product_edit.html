@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% load static %} {% block content %} {% include 'navbar.html' %}
+
+<title>Balink | Edit Product</title>
+<div class="container mx-auto mt-10 flex flex-col md:flex-row">
+  <!-- Main Product Edit Section -->
+  <div class="w-full md:w-2/3 p-6 bg-white rounded-lg shadow-lg transition-transform hover:scale-105">
+    <h2 class="text-lg font-bold mb-4 text-gray-800">Edit Product</h2>
+
+    <form action="{% url 'product:edit_product' product.id %}" method="POST" enctype="multipart/form-data" id="editForm">
+      {% csrf_token %}
+
+      <div class="mb-4">
+        <label class="block text-gray-700 font-semibold mb-2" for="image_url">Product Image</label>
+        <input type="url" id="image_url" name="image_url" value="{{ product.image_url }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+        {% if product.image_url %}
+        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg mt-4 shadow-md transition-shadow hover:shadow-lg" />
+        {% endif %}
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 font-semibold mb-2" for="name">Product Name</label>
+        <input type="text" id="name" name="name" value="{{ product.name }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 font-semibold mb-2" for="year">Year</label>
+        <input type="number" id="year" name="year" value="{{ product.year }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 font-semibold mb-2" for="price">Price (Rp/day)</label>
+        <input type="number" id="price" name="price" value="{{ product.price }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 font-semibold mb-2" for="km_driven">KM Driven</label>
+        <input type="number" id="km_driven" name="km_driven" value="{{ product.km_driven }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 font-semibold mb-2" for="dealer">Dealer</label>
+        <input type="text" id="dealer" name="dealer" value="{{ product.dealer}}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <button type="submit" form="editForm" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:opacity-80 transition mt-4 transform hover:scale-105">Save Changes</button>
+    </form>
+
+    <a href="{% url 'product:show_product_page' %}" class="w-full bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition text-center block mt-2">Back to Products</a>
+  </div>
+</div>
+{% endblock %}
