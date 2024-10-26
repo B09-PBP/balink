@@ -1,8 +1,13 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from .models import Product
-from django.http import HttpResponse
+from authentication.models import UserProfile
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from django.core import serializers
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 def search_products(request):
     query = request.GET.get('query', '')
@@ -10,10 +15,13 @@ def search_products(request):
     results = [{'name': product.name} for product in products]
     return JsonResponse(results, safe=False)
 
+@login_required(login_url='authentication:login')
 def show_product_page(request):
     search_query = request.GET.get("search", "")
     
     products = Product.objects.all()  
+    current_user = request.user  
+    user_profile = UserProfile.objects.get(user=current_user)
 
     if search_query:
         products = products.filter(name__icontains=search_query)
@@ -48,17 +56,46 @@ def show_product_page(request):
     return render(request, "product_page.html", {
         "products": products,
         "search_query": search_query,
+        "user" : user_profile,
     })
 
+@login_required(login_url='authentication:login')
 def show_product_detail(request, id):
     product = get_object_or_404(Product, id=id)
-    related_products = Product.objects.filter(dealer=product.dealer).exclude(id=product.id)[:2]  # Get up to 6 related products
+    related_products = Product.objects.filter(dealer=product.dealer).exclude(id=product.id)[:2] 
 
     context = {
         'product': product,
         'related_products': related_products,
     }
     return render(request, 'product_detail.html', context)
+
+@csrf_exempt
+@require_POST
+def add_product(request):
+    product_image_url = request.POST.get('image_url')
+    product_name = request.POST.get('name')
+    product_price = request.POST.get('price')
+    product_year = request.POST.get('year')
+    product_km = request.POST.get('km_driven')
+    dealer = request.POST.get('dealer')
+    
+    new_product = Product(
+        name=product_name,
+        price=product_price,
+        year=product_year,
+        km_driven=product_km,
+        image_url = product_image_url,
+        dealer=dealer,
+    )
+    new_product.save()
+
+    return HttpResponse(b"CREATED", status=201)
+
+def delete_product(request, id):
+    product = Product.objects.get(pk = id)
+    product.delete()
+    return HttpResponseRedirect(reverse('product:show_product_page'))
 
 def show_xml(request):
     data = Product.objects.all()

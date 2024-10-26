@@ -1,118 +1,115 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
 {% include 'navbar.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaLink</title>
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <style>
+        /* Hide sections below the header */
+        .scroll-section {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
 
-<!-- Main Landing Page Container -->
-<div class="bg-gray-50 text-gray-800">
-    
-  <!-- Hero Section -->
-  <section class="bg-cover bg-center h-screen" style="background-image: url('images/bali-background.jpg');">
-      <div class="flex items-center justify-center h-full bg-black bg-opacity-50">
-          <div class="text-center text-white px-6 md:px-12">
-              <h1 class="text-4xl md:text-6xl font-bold mb-4">Explore Bali with Ease</h1>
-              <p class="text-lg md:text-2xl mb-8">Find the perfect car to drive your Bali adventure.</p>
-              <a href="#" class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-500">Start Your Journey</a>
-          </div>
-      </div>
-  </section>
+        /* Visible state when scrolled */
+        .scroll-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <script>
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.scroll-section');
+            const triggerHeight = window.innerHeight * 0.8;
 
-  <!-- Features Section -->
-  <section class="py-20 bg-white">
-      <div class="container mx-auto px-4 text-center">
-          <h2 class="text-3xl font-bold mb-10">Why Choose CBalink?</h2>
-          <div class="flex flex-wrap justify-center gap-8">
-              <div class="max-w-xs">
-                  <img src="images/affordable.png" alt="Affordable" class="h-16 mx-auto mb-4">
-                  <h3 class="font-semibold text-xl">Affordable Pricing</h3>
-                  <p class="mt-2 text-gray-600">We offer competitive rates for a variety of cars.</p>
-              </div>
-              <div class="max-w-xs">
-                  <img src="images/easy-booking.png" alt="Easy Booking" class="h-16 mx-auto mb-4">
-                  <h3 class="font-semibold text-xl">Easy Booking</h3>
-                  <p class="mt-2 text-gray-600">Simple booking process with flexible options.</p>
-              </div>
-              <div class="max-w-xs">
-                  <img src="images/support.png" alt="24/7 Support" class="h-16 mx-auto mb-4">
-                  <h3 class="font-semibold text-xl">24/7 Support</h3>
-                  <p class="mt-2 text-gray-600">Our team is available anytime to assist you.</p>
-              </div>
-          </div>
-      </div>
-  </section>
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < triggerHeight) {
+                    section.classList.add('visible');
+                }
+            });
+        });
+    </script>
+</head>
 
-  <!-- Featured Cars Section -->
-  <section class="py-20 bg-gray-100">
-      <div class="container mx-auto px-4 text-center">
-          <h2 class="text-3xl font-bold mb-10">Our Featured Cars</h2>
-          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              <!-- Car Card -->
-              <div class="bg-white p-6 rounded-lg shadow-md">
-                  <img src="images/car1.jpg" alt="Car 1" class="h-40 w-full object-cover mb-4 rounded-md">
-                  <h3 class="text-xl font-semibold">Toyota Avanza</h3>
-                  <p class="text-gray-700 mt-2">Perfect for family trips and adventures.</p>
-                  <p class="font-bold text-blue-600 mt-4">$40 / day</p>
-                  <a href="#" class="inline-block mt-4 text-blue-600 hover:underline">View Details</a>
-              </div>
-              <div class="bg-white p-6 rounded-lg shadow-md">
-                  <img src="images/car2.jpg" alt="Car 2" class="h-40 w-full object-cover mb-4 rounded-md">
-                  <h3 class="text-xl font-semibold">Honda CR-V</h3>
-                  <p class="text-gray-700 mt-2">A spacious and comfortable SUV.</p>
-                  <p class="font-bold text-blue-600 mt-4">$60 / day</p>
-                  <a href="#" class="inline-block mt-4 text-blue-600 hover:underline">View Details</a>
-              </div>
-              <div class="bg-white p-6 rounded-lg shadow-md">
-                  <img src="images/car3.jpg" alt="Car 3" class="h-40 w-full object-cover mb-4 rounded-md">
-                  <h3 class="text-xl font-semibold">Suzuki Ertiga</h3>
-                  <p class="text-gray-700 mt-2">A versatile and affordable choice.</p>
-                  <p class="font-bold text-blue-600 mt-4">$45 / day</p>
-                  <a href="#" class="inline-block mt-4 text-blue-600 hover:underline">View Details</a>
-              </div>
-          </div>
-      </div>
-  </section>
+<body class="font-bold font-sans bg-gray-100 m-0 p-0 box-border">
+    <!-- Header Section (remains visible) -->
+    <section class="h-screen py-10 bg-white flex items-center justify-center">
+        <div class="w-1/2">
+            <img src="{% static 'img/naik_mobil_landing_page.png' %}" alt="Car Image" class="max-w-full h-auto">
+        </div>
+        <div class="w-1/3 text-left">
+            <h1 class="text-4xl">Linking your Road with 
+                <span class="text-yellow-400">Ba</span><span class="text-blue-600">Link</span>
+            </h1>
+            <a href="/product/" class="bg-blue-600 text-white py-2 px-5 rounded-md inline-block mt-5 transition duration-300 ease-in-out hover:bg-blue-700">Let's Go!</a>
+        </div>
+    </section>
 
-  <!-- Testimonials Section -->
-  <section class="py-20 bg-white">
-      <div class="container mx-auto px-4 text-center">
-          <h2 class="text-3xl font-bold mb-10">What Our Customers Say</h2>
-          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              <div class="bg-gray-50 p-6 rounded-lg shadow-md">
-                  <p class="text-gray-600">"The best car rental service I've used! Highly recommend."</p>
-                  <div class="mt-4">
-                      <h4 class="font-semibold">John Doe</h4>
-                      <p class="text-gray-500">Bali, Indonesia</p>
-                  </div>
-              </div>
-              <div class="bg-gray-50 p-6 rounded-lg shadow-md">
-                  <p class="text-gray-600">"Great prices and fantastic customer service!"</p>
-                  <div class="mt-4">
-                      <h4 class="font-semibold">Jane Smith</h4>
-                      <p class="text-gray-500">Sydney, Australia</p>
-                  </div>
-              </div>
-              <div class="bg-gray-50 p-6 rounded-lg shadow-md">
-                  <p class="text-gray-600">"Made my Bali trip unforgettable. Thank you, CBalink!"</p>
-                  <div class="mt-4">
-                      <h4 class="font-semibold">Emily Johnson</h4>
-                      <p class="text-gray-500">Los Angeles, USA</p>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
+    <!-- Popular Section (responsive and hidden until scroll) -->
+    <section class="bg-blue-600 py-12 text-center scroll-section">
+        <p class="text-3xl text-white font-bold">Our Popular</p>
+        <div class="flex flex-wrap justify-center gap-8 mt-8">
+            <!-- Card 1 -->
+            <div class="bg-white p-5 w-full sm:w-64 rounded-lg shadow-md">
+                <img src="{% static 'img/mercedes-benz-gls-class.png' %}" alt="Benz" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="text-xl mt-4 font-bold text-gray-900">Mercedes-Benz GLS</h3>
+                <p class="text-blue-600 font-bold text-lg">Rp1.000.000/day</p>
+            </div>
 
-  <!-- Call-to-Action Section -->
-  <section class="bg-blue-600 text-white py-20">
-      <div class="container mx-auto text-center">
-          <h2 class="text-3xl font-bold mb-6">Ready to Explore Bali?</h2>
-          <p class="mb-8">Book your car now and make unforgettable memories!</p>
-          <a href="#" class="px-6 py-3 bg-white text-blue-600 font-semibold rounded-md hover:bg-gray-200">Get Started</a>
-      </div>
-  </section>
+            <!-- Card 2 -->
+            <div class="bg-white p-5 w-full sm:w-64 rounded-lg shadow-md">
+                <img src="{% static 'img/motor-keren.jpg' %}" alt="Royal Enfield" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="text-xl mt-4 font-bold text-gray-900">Royal Enfield Thunderbird 350X</h3>
+                <p class="text-blue-600 font-bold text-lg">Rp500.000/day</p>
+            </div>
 
-</div>
+            <!-- Card 3 -->
+            <div class="bg-white p-5 w-full sm:w-64 rounded-lg shadow-md">
+                <img src="{% static 'img/BMW-7-Series.png' %}" alt="BMW" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="text-xl mt-4 font-bold text-gray-900">BMW 7 Series 730Ld</h3>
+                <p class="text-blue-600 font-bold text-lg">Rp1.000.000/day</p>
+            </div>
+        </div>
+    </section>
 
+    <!-- Services Section (hidden until scroll) -->
+    <section class="flex justify-center items-center py-12 bg-white scroll-section">
+        <div class="bg-yellow-400 text-black text-3xl font-bold rounded-lg p-5 text-center mr-10 min-w-max">Our Services</div>
+        <div class="max-w-2xl">
+            <h3 class="text-xl text-blue-600">Pick-Up and Drop-Off Service</h3>
+            <p class="mt-2 leading-relaxed text-gray-700">
+                BaLink ensures that customers have the convenience of being picked up and dropped off at their preferred locations. Whether for business or leisure, BaLink saves time and offers a seamless experience without the hassle of arranging separate transportation.
+            </p>
+            <h3 class="text-xl text-blue-600 mt-5">Daily and Weekly Car Rentals</h3>
+            <p class="mt-2 leading-relaxed text-gray-700">
+                Customers can choose from a variety of vehicles available for rental on both daily and weekly bases. This flexibility allows users to find transportation that suits their needs, whether for short-term errands or longer trips.
+            </p>
+            <h3 class="text-xl text-blue-600 mt-5">24/7 Customer Support</h3>
+            <p class="mt-2 leading-relaxed text-gray-700">
+                BaLink provides round-the-clock customer support, ensuring that any issues or inquiries are addressed promptly. BaLink aims to deliver peace of mind by providing reliable and responsive assistance at any hour.
+            </p>
+        </div>
+    </section>
 
-{% endblock %}
+    <!-- Offer Section (hidden until scroll) -->
+    <section class="text-center py-12 bg-white scroll-section">
+        <h2 class="text-3xl font-bold">
+            <span class="text-black">What We</span> 
+            <span class="text-blue-600">Offer</span><span class="text-black">?</span>
+        </h2>
+        <div class="flex flex-row items-center justify-center gap-5 mt-5 flex-wrap">
+            <a href="/product/" class="p-5 w-40 text-center rounded-lg shadow-lg transition transform duration-300 ease-in-out hover:scale-110 hover:bg-gray-100">Pick Your Ride!</a>
+            <a href="/review/" class="p-5 w-40 text-center rounded-lg shadow-lg transition transform duration-300 ease-in-out hover:scale-110 hover:bg-gray-100">Review Your Ride!</a>
+            <a href="/bookmark/" class="p-5 w-40 text-center rounded-lg shadow-lg transition transform duration-300 ease-in-out hover:scale-110 hover:bg-gray-100">Bookmark</a>
+            <a href="/cart/" class="p-5 w-40 text-center rounded-lg shadow-lg transition transform duration-300 ease-in-out hover:scale-110 hover:bg-gray-100">Book Your Ride!</a>
+            <a href="/article/" class="p-5 w-40 text-center rounded-lg shadow-lg transition transform duration-300 ease-in-out hover:scale-110 hover:bg-gray-100">Article</a>
+        </div>
+    </section>
+
+</body>
+{% endblock content %}
