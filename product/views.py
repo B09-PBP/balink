@@ -10,6 +10,7 @@ from django.views.decorators.http import require_POST
 from .forms import ProductEntryForm
 from django.contrib import messages
 from django.utils.html import strip_tags
+from django.core.exceptions import PermissionDenied
 
 @login_required(login_url='authentication:login')
 def show_product_page(request):
@@ -80,6 +81,9 @@ def show_product_detail(request, id):
 def edit_product(request, id):
     # Get the product to be edited
     product = Product.objects.get(id=id)
+
+    if request.user.userprofile.privilege != "admin":
+        raise PermissionDenied  # Raise a 403 error if not admin
     
     if request.method == 'POST':
         # Create a form instance with POST data and the current product instance
@@ -104,6 +108,9 @@ def add_product(request):
     product_year = request.POST.get('year')
     product_km = request.POST.get('km_driven')
     dealer = strip_tags(request.POST.get('dealer'))
+
+    if request.user.userprofile.privilege != "admin":
+        raise PermissionDenied  # Raise a 403 error if not admin
     
     # Create a new Product instance
     new_product = Product(
@@ -122,6 +129,9 @@ def add_product(request):
 def delete_product(request, id):
     # Get the product by ID and delete it
     product = Product.objects.get(pk=id)
+    if request.user.userprofile.privilege != "admin":
+        raise PermissionDenied  # Raise a 403 error if not admin
+    
     product.delete()  # Delete the product
     return HttpResponseRedirect(reverse('product:show_product_page'))  # Redirect to product page
 
@@ -210,3 +220,4 @@ def show_json_by_id(request, id):
     # Get a product by ID and serialize it to JSON format
     data = Product.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+

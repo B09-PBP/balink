@@ -7,3 +7,6 @@ class UserProfile(models.Model):
     name = models.CharField(max_length=100)
     privilege = models.CharField(max_length=10, default="customer")
     cart = models.ManyToManyField(Product, related_name='user_carts', blank=True)
+
+    def __str__(self):
+        return self.name

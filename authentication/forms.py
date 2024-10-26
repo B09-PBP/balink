@@ -25,3 +25,4 @@ class RegisterForm(UserCreationForm):
             privilege = self.cleaned_data["privilege"]
         )
         return user
+
