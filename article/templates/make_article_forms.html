@@ -1,0 +1,60 @@
+{% extends 'base.html' %} {% load static %} {% block content %} {% include 'navbar.html' %}
+
+
+
+<div class="container mx-auto p-4 flex justify-center items-center min-h-screen bg-gray-200">
+    <form method="post" class="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
+        {% csrf_token %}
+
+        <div class="mb-6">
+            <label for="id_title" class="block text-gray-600 font-semibold mb-2 flex items-center">
+                <i class="far fa-user mr-2"></i> Article Title
+            </label>  
+            {{ form.title }}
+        </div>
+
+        <div class="mb-6">
+            <label for="id_content" class="block text-gray-600 font-semibold mb-2 flex items-center">
+                <i class="far fa-edit mr-2"></i> Content
+            </label>
+            {{ form.content }}
+        </div>
+
+        <div class="mb-6">
+            <label for="id_image" class="block text-gray-600 font-semibold mb-2 flex items-center">
+                <i class="far fa-image mr-2"></i> Main Image (URL)
+            </label>
+            {{ form.image }}
+        </div>
+
+        <div class="mb-6">
+            <label for="id_image1" class="block text-gray-600 font-semibold mb-2 flex items-center">
+                <i class="far fa-image mr-2"></i> Additional Image 1 (URL)
+            </label>
+            {{ form.image1 }}
+        </div>
+
+        <div class="mb-6">
+            <label for="id_image2" class="block text-gray-600 font-semibold mb-2 flex items-center">
+                <i class="far fa-image mr-2"></i> Additional Image 2 (URL)
+            </label>
+            {{ form.image2 }}
+        </div>
+
+        <div class="mb-6">
+            <label for="id_image3" class="block text-gray-600 font-semibold mb-2 flex items-center">
+                <i class="far fa-image mr-2"></i> Additional Image 3 (URL)
+            </label>
+            {{ form.image3 }}
+        </div>
+
+        <div class="text-right">
+            <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                Save Articles
+            </button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock content %}
