@@ -22,7 +22,7 @@ class Command(BaseCommand):
                     name=row['name'],
                     year=int(row['year']),
                     price=float(row['price']),
-                    km_driven=int(row['km_driven']),
+                    km_driven=int(float(row['km_driven'])),
                     image_url=row['image_url'],
                     dealer=row['dealer']
                 )

@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
 
 # Create your views here.
+@login_required(login_url="authentication:login")
 def show_main(request):
     reviews = Review.objects.all()
     user = request.user

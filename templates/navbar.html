@@ -27,7 +27,7 @@
 
     <!-- Navigation Links -->
     <div class="hidden w-full md:flex md:w-auto" id="navbar">
-      <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium text-blue-600">
+      <ul class="flex flex-col mt-4 md:flex-row md:space-x-5 md:mt-0 md:text-sm md:font-medium text-blue-600">
         <li>
           <a href="/" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Home</a>
         </li>
@@ -46,10 +46,13 @@
         <li>
           <a href="/article/" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Article</a>
         </li>
+        <li>
+          <a href="/about_us/" class="block py-2 px-3 hover:bg-gray-100 rounded-md">About Us</a>
+        </li>
       </ul>
 
       <!-- User Authentication Section -->
-      <div class="ml-12">
+      <div class="ml-3">
         <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
           {% if request.user.is_authenticated %}
             <li>

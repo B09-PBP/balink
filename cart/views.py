@@ -67,6 +67,10 @@ def add_to_cart(request, product_id):
 def booking_cart_ajax(request):
     form = CheckoutForm(request.POST)
 
+    cart_items = request.user.userprofile.cart.all()
+    if not cart_items:
+        return JsonResponse({'status': 'error', 'message': 'Booking failed. Cart is empty.'})
+
     if form.is_valid():
         history = form.save(commit=False)
         history.user = request.user
