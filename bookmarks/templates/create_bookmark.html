@@ -12,7 +12,7 @@
   <div class="container mx-auto px-6 lg:px-8">
     <div class="text-center mb-10">
       <h2 class="text-4xl font-bold tracking-tight text-blue-600">Create a Bookmark</h2>
-      <p class="text-gray-500 mt-2">Search and select a product to bookmark, then add details for it!</p>
+      <p class="text-gray-500 mt-2">Search and select a product to bookmark, then add details to it!</p>
     </div>
 
     <!-- Product Search Section -->
@@ -30,7 +30,7 @@
     <!-- Product Grid Section -->
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" id="product-grid">
       {% for product in products %}
-        <div class="product-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl flex flex-col" data-name="{{ product.name|lower }}">
+        <div class="product-card bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-6 relative flex flex-col overflow-hidden" data-name="{{ product.name|lower }}">
           <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image w-full h-36 object-cover" />
           <div class="product-info p-4 text-center">
             <h2 class="product-name text-1xl font-semibold">{{ product.name }}</h2>
@@ -40,7 +40,7 @@
                 data-product-id="{{ product.id }}" 
                 data-product-name="{{ product.name }}" 
                 data-product-image="{{ product.image_url }}" 
-                class="select-button bg-yellow-400 hover:bg-yellow-500 text-white py-2 px-4 rounded">
+                class="select-button bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
                 Select
             </button>
           </div>
@@ -83,7 +83,7 @@
 
         <!-- Submit Button -->
         <div class="text-center">
-          <button type="button" class="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition" id="submitBookmark">Add Bookmark</button>
+          <button type="button" class="bg-blue-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-700 transition" id="submitBookmark">Add Bookmark</button>
         </div>
       </form>
     </div>

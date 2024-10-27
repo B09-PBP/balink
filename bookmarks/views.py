@@ -2,11 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from product.models import Product
 from bookmarks.models import Bookmark
 from bookmarks.forms import BookmarkForm
 from django.core import serializers
+from django.contrib.auth.models import User
+import json
 
 # View all bookmarks for the logged-in user
 @csrf_exempt
@@ -83,6 +85,28 @@ def delete_bookmark(request, id):
     bookmark = get_object_or_404(Bookmark, pk=id, user=request.user)  # Ensure only user's bookmark can be deleted
     bookmark.delete()
     return redirect("bookmarks:show_main")
+
+def get_user_bookmarks(request):
+    user = request.user
+    user_bookmarks =list(Bookmark.objects.filter(user=user))
+    data = []
+
+    for bookmark in user_bookmarks:
+        product_asli = Product.objects.get(pk=bookmark.product.pk)
+
+        each_data = {
+            'pk': bookmark.pk,
+            'note': bookmark.note,
+            'priority': 'High' if bookmark.priority == 'H' else 'Medium' if bookmark.priority == 'M' else 'Low',
+            'reminder': bookmark.reminder.strftime("%Y-%m-%d") if bookmark.reminder else '',
+            'product': {
+                'name': product_asli.name,
+                'image_url': product_asli.image_url,
+                }
+        }
+        data.append(each_data)
+
+    return HttpResponse(json.dumps(data), content_type="application/json")
 
 def show_json(request):
     user = request.user
