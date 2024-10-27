@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>BaLink | Review Page</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<!-- Header halaman main review -->
+<div class="container mx-auto mt-6 px-4">
+  <div class="w-full flex flex-col sm:flex-row items-center sm:justify-between bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-lg p-6">
+      <div class="relative w-full sm:w-1/6 flex-shrink-0 sm:ml-6">
+          <img src="{% static 'img/review_header.png' %}" alt="Review rides" class="w-full h-auto object-cover rounded-xl transform hover:scale-110 transition duration-300 ease-in-out" />
+      </div>
+      <div class="mb-4 sm:mb-0">
+          <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">Share your Ride Experience!</h2>
+          <p class="text-gray-100 mb-6 leading-relaxed">Share your driving experience in Denpasar! Let others know how BaLink made your trip to dream destinations easier.</p>
+          <a href="{% url 'review:ride_to_review' %}" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-6 py-3 rounded-lg font-bold shadow-lg transition-transform transform hover:scale-110">Add Review</a>
+      </div>
+  </div>
+</div>
+
+<!-- All review -->
+<div class="container mx-auto mt-6 px-4">
+    {% if reviews %}
+    <div class="review-list grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for review in reviews %}
+        <div class="review-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl flex flex-col relative">
+            <a href="{% url 'product:show_product_detail' review.ride.id %}" class="absolute inset-0 z-20"></a>
+            
+            <div class="relative z-10">
+                <img src="{{ review.ride.image_url }}" alt="{{ review.ride.name }}" class="w-full h-36 object-cover" />
+                <div class="absolute top-4 right-4 bg-white text-gray-900 px-3 py-1 rounded-full font-bold text-x shadow">
+                    ⭐ {{ review.rating }}
+                </div>                
+            </div>
+            <div class="review-info p-4 flex-grow text-left z-10">
+                <h2 class="review-name text-1xl font-bold">{{ review.ride.name }}</h2>
+                <p class="text-gray-500 text-x leading-relaxed">{{ review.review_message }}</p>
+            </div>
+            <p class="text-sm text-gray-400 p-4 z-10">Reviewed by {{ review.user.username }}</p>
+
+            <!-- Kalau admin bisa delete -->
+            {% if user.is_authenticated and user.userprofile.privilege == "admin" %}
+            <form action="{% url 'review:delete_review' review.id %}" method="post" class="absolute bottom-4 right-4 z-30">
+                {% csrf_token %}
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-1.5 transition duration-300 shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+        <img src="{% static 'img/no_review_here.png' %}" alt="Sad face" class="w-48 mb-4"/>
+        <p class="text-center text-gray-600 mt-4">No review here</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}
