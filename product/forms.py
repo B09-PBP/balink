@@ -35,7 +35,7 @@ class ProductEntryForm(forms.ModelForm):
 
     def clean_year(self):
         year = self.cleaned_data.get("year")
-        if year is None or year < 1886 or year > 2100:  # Assuming cars weren't made before 1886
+        if year is None or year < 1886 or year > 2024:  # Assuming cars weren't made before 1886
             raise ValidationError("Year must be between 1886 and 2100.")
         return year
 

@@ -13,33 +13,33 @@
         <label class="block text-gray-700 font-semibold mb-2" for="image_url">Product Image</label>
         <input type="url" id="image_url" name="image_url" value="{{ product.image_url }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
         {% if product.image_url %}
-        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg mt-4 shadow-md transition-shadow hover:shadow-lg" />
+        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg mt-4 shadow-md transition-shadow hover:shadow-lg"  placeholder="Enter product image URL"/>
         {% endif %}
       </div>
 
       <div class="mb-4">
         <label class="block text-gray-700 font-semibold mb-2" for="name">Product Name</label>
-        <input type="text" id="name" name="name" value="{{ product.name }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+        <input type="text" id="name" name="name" value="{{ product.name }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"  placeholder="Enter product name"/>
       </div>
 
       <div class="mb-4">
         <label class="block text-gray-700 font-semibold mb-2" for="year">Year</label>
-        <input type="number" id="year" name="year" value="{{ product.year }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+        <input type="number" id="year" name="year" value="{{ product.year }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the year (1886-2024)"/>
       </div>
 
       <div class="mb-4">
         <label class="block text-gray-700 font-semibold mb-2" for="price">Price (Rp/day)</label>
-        <input type="number" id="price" name="price" value="{{ product.price }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+        <input type="number" id="price" name="price" value="{{ product.price }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the price (positive values only)"/>
       </div>
 
       <div class="mb-4">
         <label class="block text-gray-700 font-semibold mb-2" for="km_driven">KM Driven</label>
-        <input type="number" id="km_driven" name="km_driven" value="{{ product.km_driven }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+        <input type="number" id="km_driven" name="km_driven" value="{{ product.km_driven }}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the number of kilometers driven (positive values only)"/>
       </div>
 
       <div class="mb-4">
         <label class="block text-gray-700 font-semibold mb-2" for="dealer">Dealer</label>
-        <input type="text" id="dealer" name="dealer" value="{{ product.dealer}}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+        <input type="text" id="dealer" name="dealer" value="{{ product.dealer}}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"  placeholder="Enter dealer name"/>
       </div>
 
       <button type="submit" form="editForm" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:opacity-80 transition mt-4 transform hover:scale-105">Save Changes</button>

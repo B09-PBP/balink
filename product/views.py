@@ -11,6 +11,7 @@ from .forms import ProductEntryForm
 from django.contrib import messages
 from django.utils.html import strip_tags
 from django.core.exceptions import PermissionDenied
+from django.http import JsonResponse
 
 @login_required(login_url='authentication:login')
 def show_product_page(request):
@@ -101,29 +102,32 @@ def edit_product(request, id):
 @require_POST
 @login_required
 def add_product(request):
-    # Get product details from the request
-    product_image_url = strip_tags(request.POST.get('image_url'))
-    product_name = strip_tags(request.POST.get('name'))
-    product_price = request.POST.get('price')
-    product_year = request.POST.get('year')
-    product_km = request.POST.get('km_driven')
-    dealer = strip_tags(request.POST.get('dealer'))
-
+    # Check if the user has admin privileges
     if request.user.userprofile.privilege != "admin":
         raise PermissionDenied  # Raise a 403 error if not admin
-    
-    # Create a new Product instance
-    new_product = Product(
-        name=product_name,
-        price=product_price,
-        year=product_year,
-        km_driven=product_km,
-        image_url=product_image_url,
-        dealer=dealer,
-    )
-    new_product.save()  # Save the new product to the database
 
-    return HttpResponse(b"CREATED", status=201)  # Return a success response
+    # Prepare data and validate using ProductEntryForm
+    form_data = {
+        "name": strip_tags(request.POST.get('name')),
+        "year": request.POST.get('year'),
+        "price": request.POST.get('price'),
+        "km_driven": request.POST.get('km_driven'),
+        "image_url": strip_tags(request.POST.get('image_url')),
+        "dealer": strip_tags(request.POST.get('dealer')),
+    }
+    form = ProductEntryForm(data=form_data)
+
+    # Check if the form is valid
+    if form.is_valid():
+        # Save the product if valid
+        form.save()
+        messages.success(request, "Product created successfully")
+    else:
+        # Return form errors in JSON format if validation fails
+        messages.error(request, "Failed to create product. Please correct the errors below.")
+    
+    return JsonResponse({"errors": form.errors} if form.errors else {"message": "Product created successfully"}, status=201 if form.is_valid() else 400)
+
 
 @login_required
 def delete_product(request, id):
