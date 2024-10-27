@@ -19,12 +19,12 @@ def show_article_page(request):
     user = UserProfile.objects.get(user = current_user)
 
     other_articles = [
-        {"title": "Food Court Mampau Belitung", "url": "https://example.com/food-court-mampau"},
-        {"title": "Bong Li Piang", "url": "https://example.com/bong-li-piang"},
-        {"title": "5 Tempat Belanja Oleh-oleh khas Bangka", "url": "https://example.com/tempat-belanja-oleh-oleh"},
-        {"title": "Martabak Bangka", "url": "https://example.com/martabak-bangka"},
-        {"title": "Pulau Lengkuas", "url": "https://example.com/pulau-lengkuas"},
-        {"title": "Jembatan Emas", "url": "https://example.com/jembatan-emas"}
+        {"title": "15 Destinasi Instagrammable di Bali ", "url": "https://www.indonesia.travel/id/id/ide-liburan/15-destinasi-instagrammable-di-bali-yang-harus-sobat-pesona-kunjungi.html"},
+        {"title": "10 Objek Wisata Terbaik di Bali", "url": "https://www.tripadvisor.co.id/Attractions-g294226-Activities-Bali.html"},
+        {"title": "15+ Rekomendasi Tempat Liburan Seru di Pulau Bali", "url": "https://www.cimbniaga.co.id/id/inspirasi/gayahidup/rekomendasi-tempat-wisata-alam-dan-budaya-di-pulau-bali"},
+        {"title": "Top 30 Tempat Wisata di Bali yang Tak Boleh Dilewatkan", "url": "https://id.trip.com/guide/activity/tempat-wisata-di-bali.html"},
+        {"title": "10 Best Things to Do and More in Bali", "url": "https://www.getyourguide.com/-l347/?cmp=ga&ps_theme=ttd&cq_src=google_ads&cq_cmp=15508255885&cq_con=132581187524&cq_term=bali%20top10&cq_med=&cq_plac=&cq_net=g&cq_pos=&cq_plt=gp&campaign_id=15508255885&adgroup_id=132581187524&target_id=kwd-1432321165848&loc_physical_ms=9072593&match_type=b&ad_id=574899113022&keyword=bali%20top10&ad_position=&feed_item_id=&placement=&device=c&partner_id=CD951&gad_source=1&gbraid=0AAAAADmzJCMfR3TgRU8a7SFt9CREmRFNL&gclid=CjwKCAjwyfe4BhAWEiwAkIL8sLqdQBcLdYQWsDByJsrgU5ib8Sn5VPY7EhAqrD0Fr0XwEVS7lcTo7xoCXgsQAvD_BwE"},
+        {"title": "Fun Activities In Bali", "url": "https://www.booking.com/region/id/bali.en.html?aid=377400;label=bali-5VmtKJTi*Vx6LCdfGQXLFAS388490388182:pl:ta:p1:p2:ac:ap:neg:fi:tikwd-308609428065:lp9072593:li:dec:dm:ppccp=UmFuZG9tSVYkc2RlIyh9YdbYVqXDN8zp7PNDFvT66M8;ws=&gbraid=0AAAAAD_Ls1JX1u4e669AzBLVbhxfozgwr&gclid=CjwKCAjwyfe4BhAWEiwAkIL8sGlIzFJWfwqJFv9X1GKTiXl14W24xGclMXaIQ12MsVlM7i3DEzVZ-xoCUXAQAvD_BwE"}
     ]
 
     context = {
