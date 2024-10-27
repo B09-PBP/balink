@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>BaLink | Create Bookmark</title>
+{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="bg-white min-h-screen py-12">
+  <div class="container mx-auto px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <h2 class="text-4xl font-bold tracking-tight text-blue-600">Create a Bookmark</h2>
+      <p class="text-gray-500 mt-2">Search and select a product to bookmark, then add details to it!</p>
+    </div>
+
+    <!-- Product Search Section -->
+    <div class="mb-8">
+      <div class="relative">
+        <input type="search" id="search-product" name="query" class="search-product block w-full p-4 pl-10 text-sm border rounded-lg bg-blue-600 border-gray-600 placeholder-gray-200 text-white" placeholder="Search Products...">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Grid Section -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" id="product-grid">
+      {% for product in products %}
+        <div class="product-card bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-6 relative flex flex-col overflow-hidden" data-name="{{ product.name|lower }}">
+          <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image w-full h-36 object-cover" />
+          <div class="product-info p-4 text-center">
+            <h2 class="product-name text-1xl font-semibold">{{ product.name }}</h2>
+          </div>
+          <div class="card-footer p-4 mt-auto flex justify-center">
+            <button 
+                data-product-id="{{ product.id }}" 
+                data-product-name="{{ product.name }}" 
+                data-product-image="{{ product.image_url }}" 
+                class="select-button bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+                Select
+            </button>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-gray-600">No products available to bookmark at this time.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Bookmark Form (Initially hidden, appears after selecting a product) -->
+    <div id="bookmark-form" class="hidden max-w-lg mx-auto bg-gray-100 rounded-lg shadow-lg p-8 mt-10">
+      <form id="createBookmarkForm" method="POST">
+        {% csrf_token %}
+
+        <!-- Hidden Product ID (populated when a product is selected) -->
+        <input type="hidden" id="product_id" name="product_id">
+
+        <!-- Note Field -->
+        <div class="mb-6">
+          <label for="note" class="block mb-2 text-sm font-medium text-gray-700">Note</label>
+          <textarea name="note" id="note" class="w-full border border-gray-300 rounded-lg p-2.5" rows="4" placeholder="Add a note for your bookmark" required></textarea>
+        </div>
+
+        <!-- Priority Field -->
+        <div class="mb-6">
+          <label for="priority" class="block mb-2 text-sm font-medium text-gray-700">Priority</label>
+          <select name="priority" id="priority" class="w-full border border-gray-300 rounded-lg p-2.5" required>
+            <option value="" disabled selected>Select Priority</option>
+            <option value="H">High</option>
+            <option value="M">Medium</option>
+            <option value="L">Low</option>
+          </select>
+        </div>
+
+        <!-- Reminder Field -->
+        <div class="mb-6">
+          <label for="reminder" class="block mb-2 text-sm font-medium text-gray-700">Reminder Date</label>
+          <input type="date" name="reminder" id="reminder" class="w-full border border-gray-300 rounded-lg p-2.5" required>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button type="button" class="bg-blue-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-700 transition" id="submitBookmark">Add Bookmark</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const searchInput = document.getElementById('search-product');
+  const productCards = document.querySelectorAll('.product-card');
+  const bookmarkForm = document.getElementById('bookmark-form');
+  const productIdField = document.getElementById('product_id');
+
+  searchInput.addEventListener('input', function() {
+    const query = searchInput.value.toLowerCase();
+    productCards.forEach(card => {
+      const productName = card.getAttribute('data-name');
+      card.style.display = productName.includes(query) ? 'block' : 'none';
+    });
+  });
+
+  document.querySelectorAll('.select-button').forEach(button => {
+    button.addEventListener('click', function() {
+      const productId = this.getAttribute('data-product-id');
+      productIdField.value = productId;
+      bookmarkForm.classList.remove('hidden');
+      bookmarkForm.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  document.getElementById('submitBookmark').addEventListener('click', function() {
+    const formData = new FormData(document.getElementById('createBookmarkForm'));
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+    // user MUST answer all the fields
+    const note = formData.get("note");
+    const priority = formData.get("priority");
+    const reminder = formData.get("reminder");
+    const productId = formData.get("product_id");
+
+    if (!note || !priority || !reminder || !productId) {
+      alert("Please fill out all fields before adding the bookmark.");
+      return;
+    }
+
+    // Proceed with the fetch request if all fields are filled
+    fetch("{% url 'bookmarks:create_bookmark' %}", { 
+      method: "POST",
+      headers: {
+        'X-CSRFToken': csrfToken,
+      },
+      body: formData,
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.href = "{% url 'bookmarks:show_main' %}"; 
+      } else {
+        alert("Failed to add bookmark. Please try again.");
+      }
+    })
+    .catch(error => console.log('Error:', error));
+  });
+</script>
+
+{% endblock %}
