@@ -9,26 +9,26 @@ class ArticleForms(ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'block w-full p-2 border rounded',
-                'placeholder': 'Masukkan judul artikel'
+                'placeholder': 'Enter article title'
             }),
             'content': forms.Textarea(attrs={
                 'class': 'block w-full p-2 border rounded resize-none h-32 overflow-y-auto',
-                'placeholder': 'Masukkan konten artikel'
+                'placeholder': 'Enter article content'
             }),
             'image': forms.URLInput(attrs={
                 'class': 'block w-full p-2 border rounded',
-                'placeholder': 'Masukkan URL gambar utama'
+                'placeholder': 'Enter main image URL'
             }),
             'image1': forms.URLInput(attrs={
                 'class': 'block w-full p-2 border rounded',
-                'placeholder': 'Masukkan URL gambar tambahan 1'
+                'placeholder': 'Enter additional image 1 URL'
             }),
             'image2': forms.URLInput(attrs={
                 'class': 'block w-full p-2 border rounded',
-                'placeholder': 'Masukkan URL gambar tambahan 2'
+                'placeholder': 'Enter additional image 2 URL'
             }),
             'image3': forms.URLInput(attrs={
                 'class': 'block w-full p-2 border rounded',
-                'placeholder': 'Masukkan URL gambar tambahan 3'
+                'placeholder': 'Enter additional image 3 URL'
             }),
         }

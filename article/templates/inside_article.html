@@ -48,12 +48,12 @@
                     <p class="text-gray-400 text-sm">{{ comment.timestamp }}</p>
                     
                     <!-- Only show the delete button if the user is an admin -->
-                    {% if user.privilege == "admin" %}
+                    
                     <form action="{% url 'article:delete_comment' article.id forloop.counter0 %}" method="post" class="mt-2">
                         {% csrf_token %}
                         <button type="submit" class="text-red-500 hover:text-red-700">Delete</button>
                     </form>
-                    {% endif %}
+                    
                 </div>
             {% empty %}
                 <p class="text-gray-600">No comments yet. Be the first to comment!</p>
