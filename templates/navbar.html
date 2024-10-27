@@ -51,9 +51,9 @@
       <!-- User Authentication Section -->
       <div class="ml-12">
         <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-          {% if user.is_authenticated %}
+          {% if request.user.is_authenticated %}
             <li>
-              <span class="block py-2 px-3 text-gray-700">Welcome, {{ user.username }}!</span>
+              <span class="block py-2 px-3 text-gray-700">Welcome, {{ request.user.username }}!</span>
             </li>
             <li>
               <a href="/auth/logout">

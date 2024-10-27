@@ -1,9 +1,9 @@
 {% extends 'base.html' %} {% load static %} {% block content %} {% include 'navbar.html' %}
 
 <title>Balink | Product Page</title>
-<div class="container mx-auto mt-6 flex">
+<div class="container mx-auto mt-6 flex flex-col md:flex-row">
   <!-- Sidebar for Filters -->
-  <div class="w-1/3 h-screen p-6 bg-white rounded-lg shadow-lg sticky top-0">
+  <div class="w-full md:w-1/3 h-screen p-6 bg-white rounded-lg shadow-lg sticky top-0">
     <h2 class="text-lg font-bold mb-4 text-gray-800">Filter Products</h2>
     <form method="GET" class="mb-6">
       <div class="mb-4 flex flex-col">
@@ -11,34 +11,34 @@
         <div id="suggestions" class="absolute z-10 bg-white border border-gray-300 rounded-lg w-full mt-1 hidden"></div>
       </div>
 
-      <div class="mb-4 flex justify-between">
-        <div class="w-1/2 pr-2">
+      <div class="mb-4 flex justify-between flex-wrap">
+        <div class="w-full md:w-1/2 pr-2">
           <label for="min_price" class="block text-sm font-medium text-gray-700">Min Price</label>
           <input type="number" name="min_price" id="min_price" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400" placeholder="0" value="{{ request.GET.min_price }}" />
         </div>
-        <div class="w-1/2 pl-2">
+        <div class="w-full md:w-1/2 pl-2 mt-4 md:mt-0">
           <label for="max_price" class="block text-sm font-medium text-gray-700">Max Price</label>
           <input type="number" name="max_price" id="max_price" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400" placeholder="100000" value="{{ request.GET.max_price }}" />
         </div>
       </div>
 
-      <div class="mb-4 flex justify-between">
-        <div class="w-1/2 pr-2">
+      <div class="mb-4 flex justify-between flex-wrap">
+        <div class="w-full md:w-1/2 pr-2">
           <label for="min_year" class="block text-sm font-medium text-gray-700">Min Year</label>
           <input type="number" name="min_year" id="min_year" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400" placeholder="2000" value="{{ request.GET.min_year }}" />
         </div>
-        <div class="w-1/2 pl-2">
+        <div class="w-full md:w-1/2 pl-2 mt-4 md:mt-0">
           <label for="max_year" class="block text-sm font-medium text-gray-700">Max Year</label>
           <input type="number" name="max_year" id="max_year" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400" placeholder="2023" value="{{ request.GET.max_year }}" />
         </div>
       </div>
 
-      <div class="mb-4 flex justify-between">
-        <div class="w-1/2 pr-2">
+      <div class="mb-4 flex justify-between flex-wrap">
+        <div class="w-full md:w-1/2 pr-2">
           <label for="min_km" class="block text-sm font-medium text-gray-700">Min KM Driven</label>
           <input type="number" name="min_km" id="min_km" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400" placeholder="0" value="{{ request.GET.min_km }}" />
         </div>
-        <div class="w-1/2 pl-2">
+        <div class="w-full md:w-1/2 pl-2 mt-4 md:mt-0">
           <label for="max_km" class="block text-sm font-medium text-gray-700">Max KM Driven</label>
           <input type="number" name="max_km" id="max_km" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400" placeholder="100000" value="{{ request.GET.max_km }}" />
         </div>
@@ -53,38 +53,38 @@
     <!-- Promotional Section -->
     <div class="mt-8 p-6 bg-yellow-100 rounded-lg shadow-md">
       <h3 class="text-lg font-semibold text-yellow-600 mb-2">Don't Miss Out!</h3>
-      <p class="text-gray-700">Book your exclusive ride today and make the most of every journey!</p>
-      <a href="#" class="mt-4 inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">Shop Now</a>
+      <p class="text-gray-700">Book your exclusive ride from BaLink today!</p>
+      <a href="{% url 'bookmarks:show_main' %}" class="mt-4 inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">Book now</a>
     </div>
   </div>
 
   <!-- Carousel Content -->
-  <div class="flex-1 ml-6">
+  <div class="flex-1 ml-0 md:ml-6">
     <div class="relative bg-gradient-to-r from-blue-700 to-blue-500 rounded-xl overflow-hidden shadow-lg mb-6">
       <div class="carousel-wrapper overflow-hidden relative">
         <div class="carousel-slide flex transition-transform duration-700 ease-in-out">
           <!-- Slide 1 -->
           <div class="w-full flex-shrink-0 flex items-center justify-between space-x-8 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-lg p-10 transform transition duration-300 hover:scale-105 hover:shadow-xl">
-            <div>
+            <div class="flex-1">
               <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">Exclusive Transportation Collection</h2>
               <h5 class="text-xl md:text-2xl font-semibold mb-4 text-blue-300">Elevate Your Experience</h5>
               <p class="text-gray-300 mb-6 leading-relaxed">Premium range of transportation options for all occasions.</p>
               <a href="#" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-6 py-3 rounded-lg font-bold shadow-lg transition-transform transform hover:scale-110">Explore Now</a>
             </div>
-            <div class="relative">
+            <div class="relative hidden md:block">
               <img src="{% static 'img/traveler2.png' %}" alt="Featured Transport" class="w-full h-auto object-cover rounded-xl transform hover:scale-110 transition duration-300 ease-in-out" />
             </div>
           </div>
 
           <!-- Slide 2 -->
           <div class="w-full flex-shrink-0 flex items-center justify-between space-x-8 bg-gradient-to-br from-blue-700 to-blue-600 text-white rounded-lg p-10 transform transition duration-300 hover:scale-105 hover:shadow-xl">
-            <div>
-              <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">Modern & Stylish Designs</h2>
+            <div class="flex-1">
+              <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">Modern Designs</h2>
               <h5 class="text-xl md:text-2xl font-semibold mb-4 text-blue-300">Travel with Ease</h5>
               <p class="text-gray-300 mb-6 leading-relaxed">Experience our latest transportation styles and designs.</p>
-              <a href="#" class="bg-yellow-500 hover:bg-yellow-600  text-gray-900 px-6 py-3 rounded-lg font-bold shadow-lg transition-transform transform hover:scale-110">Discover Now</a>
+              <a href="#" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-6 py-3 rounded-lg font-bold shadow-lg transition-transform transform hover:scale-110">Discover Now</a>
             </div>
-            <div class="relative">
+            <div class="relative hidden md:block">
               <img src="{% static 'img/traveler.png' %}" alt="Modern Transport" class="w-full h-auto object-cover rounded-xl transform hover:scale-110 transition duration-300 ease-in-out" />
             </div>
           </div>
@@ -134,7 +134,7 @@
             </div>
             <div class="mb-4">
               <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
-              <input type="number" id="year" name="year" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-blue-700" placeholder="Enter the year (1886-2024)"required />
+              <input type="number" id="year" name="year" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-blue-700" placeholder="Enter the year (1886-2024)" required />
             </div>
             <div class="mb-4">
               <label for="price" class="block text-sm font-medium text-gray-700">Price (Rp/day)</label>
@@ -142,7 +142,7 @@
             </div>
             <div class="mb-4">
               <label for="km_driven" class="block text-sm font-medium text-gray-700">KM Driven</label>
-              <input type="number" id="km_driven" name="km_driven" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-blue-700 " placeholder="Enter the number of kilometers driven (positive values only)" required />
+              <input type="number" id="km_driven" name="km_driven" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-blue-700" placeholder="Enter the number of kilometers driven (positive values only)" required />
             </div>
             <div class="mb-4">
               <label for="dealer" class="block text-sm font-medium text-gray-700">Dealer</label>
@@ -179,9 +179,7 @@
 
   // Automatically move to the next slide every 5 seconds (5000 ms)
   setInterval(nextSlide, 5000);
-</script>
 
-<script>
   async function getProduct() {
     // Construct URL with query parameters
     const url = new URL("{% url 'product:show_json' %}", window.location.origin);
