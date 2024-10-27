@@ -46,11 +46,11 @@
             {% if user.privilege == "admin" %}
                 <a href="{% url 'article:make_article_form' %}" class="block text-white bg-green-600 px-4 py-2 rounded-md hover:bg-green-700 transition duration-300 text-center">Add New Article</a>
             {% endif %}
-            <div class="bg-blue-500 text-white shadow-md rounded-md p-4 mt-4">
+            <div class="bg-blue-600 text-white shadow-md rounded-md p-4 mt-4">
                 <h2 class="text-lg font-semibold mb-4">Other Articles</h2>
                 <div class="flex flex-col space-y-2">
                     {% for other in other_articles %}
-                        <a href="{{ other.url }}" class="block bg-sky-400 p-2 rounded-md hover:bg-blue-800 transition duration-300 text-sm text-white">
+                        <a href="{{ other.url }}" class="block bg-blue-400 p-2 rounded-md hover:bg-blue-300 transition duration-300 text-sm text-white">
                             {{ other.title }}
                         </a>
                     {% endfor %}
@@ -58,7 +58,7 @@
             </div>
 
             <!-- Map Section -->
-            <div class="bg-blue-500 text-white shadow-md rounded-md p-4">
+            <div class="bg-blue-600 text-white shadow-md rounded-md p-4">
                 <h2 class="text-lg font-semibold mb-4">Find Us on Google Maps</h2>
                 <div class="flex flex-col space-y-2">
                     <!-- Embedded Google Map -->

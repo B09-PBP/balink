@@ -101,12 +101,22 @@ def add_comment(request, article_id):
 
 
 @login_required(login_url='authentication:login')
+@csrf_exempt  # Allow CSRF exemption for the view
 def delete_comment(request, article_id, comment_index):
     article = get_object_or_404(Article, id=article_id)
+    
+    # Check if the user is authorized to delete the comment
+    if article.user != request.user and not request.user.userprofile.privilege == "admin":
+        return JsonResponse({'success': False, 'error': 'Not authorized'}, status=403)
+    
     if request.method == "POST":
-        article.delete_comment(comment_index)
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+        try:
+            article.delete_comment(comment_index)  # Remove the comment at the specified index
+            return JsonResponse({'success': True})
+        except IndexError:
+            return JsonResponse({'success': False, 'error': 'Invalid comment index'}, status=400)
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
 
 
 

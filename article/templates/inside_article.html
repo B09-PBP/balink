@@ -26,7 +26,8 @@
                 <span class="dot w-2 h-2 bg-gray-300 rounded-full"></span>
             </div>
         </div>
-
+        
+        <br>
         <!-- Display Article Content -->
         {% for paragraph in paragraphs %}
         <p class="text-gray-600 text-lg leading-relaxed mb-4 break-words whitespace-normal" style="line-height: 1.8; text-align: justify;">
@@ -45,15 +46,26 @@
                     <p class="font-semibold">{{ comment.user }}</p>
                     <p>{{ comment.content }}</p>
                     <p class="text-gray-400 text-sm">{{ comment.timestamp }}</p>
+                    
+                    <!-- Only show the delete button if the user is an admin -->
+                    {% if user.privilege == "admin" %}
+                    <form action="{% url 'article:delete_comment' article.id forloop.counter0 %}" method="post" class="mt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-500 hover:text-red-700">Delete</button>
+                    </form>
+                    {% endif %}
                 </div>
             {% empty %}
                 <p class="text-gray-600">No comments yet. Be the first to comment!</p>
             {% endfor %}
         </div>
+
+        <!-- Add Comment Button Section -->
         <div class="mt-4">
             <button id="addCommentBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Comment</button>
         </div>
     </div>
+
 
     <!-- Product Cards Section -->
     <div class="mt-12">
