@@ -7,7 +7,7 @@ class Bookmark(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     note = models.TextField(default="There's no note yet")
 
-    #High = H, Medium = M, Low = L
+    # High = H, Medium = M, Low = L
     priority = models.CharField(max_length=1, default='M')
 
     # Reminder date for when the user wants to revisit the bookmark

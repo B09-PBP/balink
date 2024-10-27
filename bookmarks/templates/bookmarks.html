@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% load static %} 
+{% load static %}
 
 {% block meta %}
-<title>Bookmark | BaLink</title>
+<title>BaLink | Bookmark</title>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
-{% endblock %} 
+{% endblock %}
 
-{% block content %} 
+{% block content %}
 
 {% include 'navbar.html' %}
 
@@ -19,20 +19,23 @@
     <!-- Bookmarks Collection Section -->
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {% for bookmark in bookmarks %}
-        <div class="bg-white rounded-lg shadow-lg p-6 relative">
+        <div class="bg-white rounded-lg shadow-lg p-6 relative" id="bookmark-{{ bookmark.id }}">
             <!-- Product Image -->
-            <img src="{{ bookmark.product.image.url }}" alt="{{ bookmark.product.name }}" class="w-full h-48 object-cover rounded-lg mb-4">
+            <img src="{{ bookmark.product.image_url }}" alt="{{ bookmark.product.name }}" class="w-full h-48 object-cover rounded-lg mb-4">
 
             <!-- Product Details -->
             <h3 class="text-2xl font-semibold text-gray-800">{{ bookmark.product.name }}</h3>
-            <p class="text-gray-500">Saved on: {{ bookmark.created_at|date:"Y-m-d H:i" }}</p>
-            <p class="text-gray-500">Priority: {{ bookmark.get_priority_display }}</p>
-            <p class="text-gray-500">Reminder: {{ bookmark.reminder|date:"Y-m-d" }}</p>
-            <p class="text-gray-700 mt-2">{{ bookmark.note }}</p>
+            <p class="text-gray-500">Priority: <span id="priority-{{ bookmark.id }}">
+                {% if bookmark.priority == 'H' %} High
+                {% elif bookmark.priority == 'M' %} Medium
+                {% elif bookmark.priority == 'L' %} Low {% endif %}
+            </span></p>
+            <p class="text-gray-500">Reminder: <span id="reminder-{{ bookmark.id }}">{{ bookmark.reminder|date:"l, d-m-Y" }}</span></p>
+            <p class="text-gray-700 mt-2" id="note-{{ bookmark.id }}">{{ bookmark.note }}</p>
 
             <!-- Update & Delete Buttons -->
             <div class="flex justify-between mt-4">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition" onclick="openUpdateModal('{{ bookmark.id }}')">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition" onclick="openUpdateModal('{{ bookmark.id }}', '{{ bookmark.note|escapejs }}', '{{ bookmark.priority }}', '{{ bookmark.reminder }}')">
                     Update
                 </button>
                 <form action="{% url 'bookmarks:delete_bookmark' bookmark.id %}" method="post" class="inline-block">
@@ -53,28 +56,32 @@
 <!-- Modal for Update Bookmark -->
 <div id="updateBookmarkModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
     <div class="bg-white rounded-lg p-8 w-full max-w-lg">
-        <h3 class="text-xl font-semibold text-gray-800 mb-4">Update Bookmark</h3>
-        <form id="updateForm" method="POST">
+        <h3 class="text-center text-xl font-semibold text-gray-800 mb-4">Update Bookmark</h3>
+        <form id="updateForm" method="POST" action="">
             {% csrf_token %}
+            <!-- Hidden Bookmark ID -->
+            <input type="hidden" name="bookmark_id" id="bookmark_id">
+
             <!-- Note Field -->
             <label for="note" class="block mb-2 text-gray-700 font-medium">Note</label>
-            <textarea name="note" id="note" class="w-full border border-gray-300 rounded-lg p-2" rows="4" required>{{ form.note.value }}</textarea>
+            <textarea name="note" id="update-note" class="w-full border border-gray-300 rounded-lg p-2" rows="4"></textarea>
 
             <!-- Priority Field -->
             <label for="priority" class="block mt-4 mb-2 text-gray-700 font-medium">Priority</label>
-            <select name="priority" id="priority" class="w-full border border-gray-300 rounded-lg p-2">
-                <option value="H" {% if form.priority.value == "H" %}selected{% endif %}>High</option>
-                <option value="M" {% if form.priority.value == "M" %}selected{% endif %}>Medium</option>
-                <option value="L" {% if form.priority.value == "L" %}selected{% endif %}>Low</option>
+            <select name="priority" id="update-priority" class="w-full border border-gray-300 rounded-lg p-2">
+                <option value="" disabled>Select Priority</option>
+                <option value="H">High</option>
+                <option value="M">Medium</option>
+                <option value="L">Low</option>
             </select>
 
             <!-- Reminder Field -->
             <label for="reminder" class="block mt-4 mb-2 text-gray-700 font-medium">Reminder</label>
-            <input type="date" name="reminder" id="reminder" class="w-full border border-gray-300 rounded-lg p-2" value="{{ form.reminder.value }}">
+            <input type="date" name="reminder" id="update-reminder" class="w-full border border-gray-300 rounded-lg p-2">
 
             <!-- Submit Button -->
             <div class="flex justify-end mt-6">
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Save Changes</button>
+                <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" onclick="submitUpdate()">Save Changes</button>
                 <button type="button" class="ml-4 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition" onclick="closeModal()">Cancel</button>
             </div>
         </form>
@@ -82,13 +89,52 @@
 </div>
 
 <script>
-    function openUpdateModal(bookmarkId) {
+    function openUpdateModal(bookmarkId, note, priority, reminder) {
         document.getElementById("updateBookmarkModal").classList.remove("hidden");
-        document.getElementById("updateForm").action = "/bookmarks/update/" + bookmarkId;
+        document.getElementById("bookmark_id").value = bookmarkId;
+        document.getElementById("update-note").value = note;
+        document.getElementById("update-priority").value = priority;
+        document.getElementById("update-reminder").value = reminder || '';
     }
 
     function closeModal() {
         document.getElementById("updateBookmarkModal").classList.add("hidden");
     }
+
+    function submitUpdate() {
+    const bookmarkId = document.getElementById("bookmark_id").value;
+    const note = document.getElementById("update-note").value;
+    const priority = document.getElementById("update-priority").value;
+    const reminder = document.getElementById("update-reminder").value;
+
+    // Validate that all fields are filled
+    if (!note || !priority || !reminder) {
+        alert("Please fill out all fields before saving changes.");
+        return;
+    }
+
+    // Prepare form data for AJAX request
+    const formData = new FormData();
+    formData.append("note", note);
+    formData.append("priority", priority);
+    formData.append("reminder", reminder);
+    formData.append("csrfmiddlewaretoken", document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+    // AJAX request to update bookmark without redirecting
+    fetch(`/bookmarks/update-bookmark/${bookmarkId}/`, {
+        method: "POST",
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+
+        } else {
+            alert("Failed to update bookmark. Please try again.");
+        }
+    })
+    .catch(error => console.error('Error:', error));
+    }
 </script>
+
 {% endblock %}
