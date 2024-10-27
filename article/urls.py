@@ -9,5 +9,5 @@ urlpatterns = [
     path('delete/<int:id>/', delete_article, name='delete_article'),
     path('article/<int:id>/', inside_article, name='inside_article'),
     path('edit/<int:id>/', edit_article, name='edit_article'),
-    path('article/<int:article_id>/add_comment/', add_comment, name='add_comment')
+    path('<int:article_id>/add_comment/', add_comment, name='add_comment')
 ]
