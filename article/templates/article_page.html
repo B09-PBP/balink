@@ -2,62 +2,84 @@
 
 
 <div class="container mx-auto mt-8">
-    <!-- Judul Halaman Utama -->
+    <!-- Main Header with Title -->
     <div class="mb-8">
         <h1 class="text-3xl font-medium text-gray-800 tracking-tight">Explore Our Latest Articles</h1>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-6">
-        <!-- Bagian Artikel Utama -->
+        <!-- Main Articles Section -->
         <div class="w-full lg:w-3/4">
             <div class="space-y-6">
                 {% for article in show_article %}
-                    <div class="bg-white rounded-md border border-gray-200 shadow-sm overflow-hidden">
-                        <div class="w-full h-40"> <!-- Reduce height here to make card more compact -->
-                            <img src="{{ article.image }}" alt="{{ article.title }}" class="w-full h-full object-cover"> <!-- Ensure image covers area proportionally -->
+                    <a href="{% url 'article:inside_article' article.id %}" class="block bg-white rounded-md border border-gray-300 overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1 no-underline">
+                        <div class="w-full h-40 overflow-hidden">
+                            <img src="{{ article.image }}" alt="{{ article.title }}" class="w-full h-full object-cover transition-transform duration-500 transform hover:scale-105">
                         </div>
-                        <div class="p-2"> <!-- Reduce padding for more compact size -->
-                            <h2 class="text-lg font-semibold mb-1 text-gray-800">{{ article.title }}</h2>
-                            <p class="text-gray-600 mb-2 text-sm">{{ article.content|truncatewords:15 }}</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <a href="{% url 'article:inside_article' article.id %}" class="text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700 transition duration-300 text-sm">View More →</a>
-                                
+                        <div class="p-4 bg-white">
+                            <h2 class="text-xl font-semibold mb-1 text-gray-900">{{ article.title }}</h2>
+                            <p class="text-gray-700 mb-2">
+                                {{ article.content|slice:":100" }}{% if article.content|length > 100 %}... <span class="text-blue-500">View More</span>{% endif %}
+                            </p>
+                            <div class="flex justify-end items-center mt-2 space-x-2">
                                 {% if user.privilege == "admin" %}
-                                <form action="{% url 'article:delete_article' article.id %}" method="post" class="inline-block">
-                                    {% csrf_token %}
-                                    <button type="submit" class="text-white bg-red-500 px-3 py-1 rounded-md hover:bg-red-600 transition duration-300 text-sm">Hapus</button>
-                                </form>
+                                    <div class="flex space-x-2">
+                                        <!-- Edit Button -->
+                                        <a href="{% url 'article:edit_article' article.id %}" class="text-white bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600 transition duration-300 text-sm font-medium">Edit</a>
+                                    
+                                        <!-- Delete Button -->
+                                        <form action="{% url 'article:delete_article' article.id %}" method="post" class="inline-block">
+                                            {% csrf_token %}
+                                            <button type="submit" class="text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 text-sm font-medium">Delete</button>
+                                        </form>
+                                    </div>
                                 {% endif %}
                             </div>
                         </div>
-                    </div>
+                    </a>
                 {% endfor %}
             </div>
         </div>
 
-        <!-- Bagian Other Articles -->
-        <div class="w-full lg:w-1/4">
-            <div class="bg-white shadow-md rounded-md p-4">
-                <h2 class="text-lg font-semibold mb-4 text-gray-700">Other Articles</h2>
+        <!-- Other Articles and Map Section -->
+        <div class="w-full lg:w-1/4 space-y-4">
+            {% if user.privilege == "admin" %}
+                <a href="{% url 'article:make_article_form' %}" class="block text-white bg-green-600 px-4 py-2 rounded-md hover:bg-green-700 transition duration-300 text-center">Add New Article</a>
+            {% endif %}
+            <div class="bg-blue-500 text-white shadow-md rounded-md p-4 mt-4">
+                <h2 class="text-lg font-semibold mb-4">Other Articles</h2>
                 <div class="flex flex-col space-y-2">
                     {% for other in other_articles %}
-                        <a href="{{ other.url }}" class="block bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition duration-300 text-sm">
+                        <a href="{{ other.url }}" class="block bg-sky-400 p-2 rounded-md hover:bg-blue-800 transition duration-300 text-sm text-white">
                             {{ other.title }}
                         </a>
                     {% endfor %}
                 </div>
             </div>
+
+            <!-- Map Section -->
+            <div class="bg-blue-500 text-white shadow-md rounded-md p-4">
+                <h2 class="text-lg font-semibold mb-4">Find Us on Google Maps</h2>
+                <div class="flex flex-col space-y-2">
+                    <!-- Embedded Google Map -->
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126762.6833927802!2d115.10977737748834!3d-8.340538689772307!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd22aa31f21bf97%3A0x3030bfbca7b9b30!2sBali!5e0!3m2!1sen!2sid!4v1634814933983!5m2!1sen!2sid" 
+                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy">
+                    </iframe>
+                    <!-- Link to Google Maps -->
+                    <a href="https://goo.gl/maps/ZRjU4DUuRcs4AStT6" target="_blank" class="text-white hover:underline mt-2">Open in Google Maps</a>
+                </div>
+            </div>
         </div>
     </div>
 
-
-    <!-- Tombol Tambah Artikel jika admin -->
-    {% if user.privilege == "admin" %}
-    <div class="flex justify-center mt-8">
-        <a href="{% url 'article:make_article_form' %}" class="text-white bg-green-600 px-4 py-2 rounded-md hover:bg-green-700 transition duration-300">Tambah Artikel Baru</a>
+    <!-- Fun Fact Section -->
+    <div class="mt-12 bg-blue-100 py-8 px-4 rounded-md text-center">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Did You Know?</h2>
+        <p class="text-gray-600 text-lg italic">
+            "Bali isn’t just an island, it’s a gateway to countless adventures and cultural treasures.  At BaLink, we believe every journey through Bali unveils a new story waiting to be discovered."
+        </p>
     </div>
-    {% endif %}
 </div>
-
 
 {% endblock content %}

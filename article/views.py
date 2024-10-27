@@ -3,10 +3,13 @@ from article.forms import ArticleForms
 from article.models import Article
 from product.models import Product
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 import json
 from authentication.models import UserProfile
+from .models import Product
+
 
 
 @login_required(login_url='authentication:login')
@@ -62,9 +65,14 @@ def delete_article(request, id):
 @login_required(login_url='authentication:login')
 def inside_article(request, id):
     article = get_object_or_404(Article, id=id)
+    product = Product.objects.all()[:3]
+    paragraphs = article.content.split('\n\n')
+
     context = {
         'article': article,
-        'comments': article.comments  
+        'paragraphs': paragraphs, 
+        'comments': article.comments,  
+        'products': product
     }
     return render(request, "inside_article.html", context)
 
@@ -72,17 +80,22 @@ def inside_article(request, id):
 
 @login_required(login_url='authentication:login')
 @csrf_exempt  
+@require_POST
 def add_comment(request, article_id):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            comment_text = data.get('comment_text')
-            if comment_text:
-                article = get_object_or_404(Article, id=article_id)
-                article.add_comment(request.user, comment_text)
-                return JsonResponse({'success': True, 'user': request.user.username, 'comment': comment_text})
-        except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)})
+    try:
+        comment_text = request.POST.get('comment_text', '').strip()
+        
+        if comment_text:
+            article = get_object_or_404(Article, id=article_id)
+            article.add_comment(request.user, comment_text)
+            
+            return JsonResponse({'success': True, 'user': request.user.username, 'comment': comment_text})
+        else:
+            return JsonResponse({'success': False, 'error': 'Empty comment text'})
+    
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
@@ -94,3 +107,21 @@ def delete_comment(request, article_id, comment_index):
         article.delete_comment(comment_index)
         return JsonResponse({'success': True})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+
+@login_required(login_url='authentication:login')
+def edit_article(request, id):
+    article = get_object_or_404(Article, id=id)
+
+    if request.method == 'POST':
+        form = ArticleForms(request.POST, instance=article)
+        if form.is_valid():
+            form.save()
+            return redirect('article:show_article_page')
+    else:
+        form = ArticleForms(instance=article)
+
+    return render(request, 'edit_article_form.html', {'form': form, 'article': article})
+
+

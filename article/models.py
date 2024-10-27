@@ -11,6 +11,9 @@ class Article(models.Model):
     content = models.TextField()
     image = models.URLField()
     comments = models.JSONField(default=list, blank=True)  
+    image1 = models.URLField(null=True, blank=True)
+    image2 = models.URLField(null=True, blank=True)
+    image3 = models.URLField(null=True, blank=True)
 
 
     def add_comment(self, user, comment_content):
