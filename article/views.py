@@ -67,12 +67,15 @@ def inside_article(request, id):
     article = get_object_or_404(Article, id=id)
     product = Product.objects.all()[:3]
     paragraphs = article.content.split('\n\n')
+    current_user = request.user  
+    user_profile = UserProfile.objects.get(user=current_user)
 
     context = {
         'article': article,
         'paragraphs': paragraphs, 
         'comments': article.comments,  
-        'products': product
+        'products': product,
+        'user': user_profile
     }
     return render(request, "inside_article.html", context)
 
