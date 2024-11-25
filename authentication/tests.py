@@ -201,6 +201,3 @@ class RegisterFormTest(TestCase):
 
         self.assertEqual(response.status_code, 302)  # Check for redirect
         self.assertRedirects(response, reverse('authentication:login'))  # Check if redirected to login
-
-
-
