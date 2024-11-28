@@ -40,4 +40,4 @@ class Article(models.Model):
             pass
 
     def __str__(self):
-        return self.titl
+        return self.title

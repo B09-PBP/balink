@@ -92,6 +92,7 @@
       </div>
     </div>
 
+    {% if user.privilege == 'admin' %}
     <!-- Add Product Button -->
     <div class="container mx-auto mt-6 flex justify-end items-center">
       <button
@@ -103,6 +104,7 @@
         Add New Product
       </button>
     </div>
+    {% endif %}
 
     <!-- Modal (Hidden by default) -->
     <div id="crudModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-x-hidden overflow-y-auto">

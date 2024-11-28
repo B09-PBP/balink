@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
 @csrf_exempt
-@login_required(login_url="authentication:login_user")
+@login_required(login_url="authentication:login")
 def show_cart(request):
     user = request.user
 
