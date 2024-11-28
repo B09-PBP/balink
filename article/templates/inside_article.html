@@ -1,0 +1,196 @@
+{% extends 'base.html' %} {% load static %} {% block content %} {% include 'navbar.html' %}
+
+<title>Balink | Inside Article</title>
+<div class="container mx-auto mt-8">
+    <!-- Display Article Details -->
+    <div class="bg-white p-6 rounded-md mb-8 w-full">
+        <h1 class="text-3xl font-bold mb-4 text-gray-800">{{ article.title }}</h1>
+
+        <!-- Slideshow Section -->
+        <div class="relative w-full h-[600px] mb-4 overflow-hidden rounded-md">
+            <div id="slideshow" class="relative w-full h-full">
+                <img src="{{ article.image }}" alt="{{ article.title }}" class="w-full h-full object-cover absolute transition-opacity duration-500 opacity-100">
+                <img src="{{ article.image1 }}" alt="{{ article.title }}" class="w-full h-full object-cover absolute transition-opacity duration-500 opacity-0">
+                <img src="{{ article.image2 }}" alt="{{ article.title }}" class="w-full h-full object-cover absolute transition-opacity duration-500 opacity-0">
+                <img src="{{ article.image3 }}" alt="{{ article.title }}" class="w-full h-full object-cover absolute transition-opacity duration-500 opacity-0">
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <button id="prevBtn" class="absolute top-1/2 left-4 bg-gray-800 text-white bg-opacity-50 hover:bg-opacity-100 px-3 py-1 rounded-full transform -translate-y-1/2">&lt;</button>
+            <button id="nextBtn" class="absolute top-1/2 right-4 bg-gray-800 text-white bg-opacity-50 hover:bg-opacity-100 px-3 py-1 rounded-full transform -translate-y-1/2">&gt;</button>
+            
+            <!-- Indicator Dots -->
+            <div id="dotsContainer" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                <span class="dot w-2 h-2 bg-gray-300 rounded-full"></span>
+                <span class="dot w-2 h-2 bg-gray-300 rounded-full"></span>
+                <span class="dot w-2 h-2 bg-gray-300 rounded-full"></span>
+                <span class="dot w-2 h-2 bg-gray-300 rounded-full"></span>
+            </div>
+        </div>
+        
+        <br>
+        <!-- Display Article Content -->
+        {% for paragraph in paragraphs %}
+        <p class="text-gray-600 text-lg leading-relaxed mb-4 break-words whitespace-normal" style="line-height: 1.8; text-align: justify;">
+            {{ paragraph }}
+        </p>
+        {% endfor %}
+
+    </div>
+
+    <!-- Section for Comments -->
+    <div class="mt-8">
+        <h2 class="text-2xl font-semibold mb-4">Comments</h2>
+        <div id="comments-section">
+            {% for comment in article.comments %}
+                <div class="bg-gray-100 p-4 rounded-md mb-2">
+                    <p class="font-semibold">{{ comment.user }}</p>
+                    <p>{{ comment.content }}</p>
+                    <p class="text-gray-400 text-sm">{{ comment.timestamp }}</p>
+                    
+                    <!-- Only show the delete button if the user is an admin -->
+                    
+                    <form action="{% url 'article:delete_comment' article.id forloop.counter0 %}" method="post" class="mt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-500 hover:text-red-700">Delete</button>
+                    </form>
+                    
+                </div>
+            {% empty %}
+                <p class="text-gray-600">No comments yet. Be the first to comment!</p>
+            {% endfor %}
+        </div>
+
+        <!-- Add Comment Button Section -->
+        <div class="mt-4">
+            <button id="addCommentBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Comment</button>
+        </div>
+    </div>
+
+
+    <!-- Product Cards Section -->
+    <div class="mt-12">
+        <h2 class="text-2xl font-semibold mb-4">Our Top 3 Recommendation Cars</h2>
+        <div class="flex justify-between space-x-4">
+            {% for product in products %}
+                <div class="bg-white border rounded-md shadow-sm w-1/3">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-32 object-cover rounded-t-md">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold">{{ product.name }}</h3>
+                        <p class="text-gray-600 mb-2">Price: ${{ product.price }}</p>
+                        <a href="{% url 'product:show_product_detail' product.id %}" class="text-blue-600 hover:text-blue-800">View Details</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Comment Modal -->
+<div id="commentModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-md shadow-md w-96">
+        <h3 class="text-xl font-bold mb-4">Write Your Comment</h3>
+        <form id="commentForm">
+            <textarea id="commentText" name="comment_text" class="w-full p-3 border rounded mb-4 h-40 resize-none focus:ring focus:ring-blue-300" placeholder="Write your comment..."></textarea>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Submit</button>
+            <button type="button" id="closeModalBtn" class="bg-gray-500 text-white px-4 py-2 rounded ml-2 hover:bg-gray-600">Close</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    // Handle the display of the modal for adding comments
+    document.getElementById("addCommentBtn").addEventListener("click", function() {
+        document.getElementById("commentModal").classList.remove("hidden");
+    });
+
+    document.getElementById("closeModalBtn").addEventListener("click", function() {
+        document.getElementById("commentModal").classList.add("hidden");
+    });
+
+    // Adding an event listener to the form for AJAX submission
+    document.getElementById("commentForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        addComment();
+    });
+
+    function addComment() {
+        const formData = new FormData(document.getElementById("commentForm"));
+        const articleId = "{{ article.id }}";
+
+        fetch(`/article/${articleId}/add_comment/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",  // Include CSRF token
+            },
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Construct the HTML for the new comment
+                const newComment = `
+                    <div class="bg-gray-100 p-4 rounded-md mb-2 animate-slide-in">
+                        <p class="font-semibold">${data.user}</p>
+                        <p>${data.comment}</p>
+                        <p class="text-gray-400 text-sm">Just now</p>
+                    </div>
+                `;
+                // Insert the new comment into the comments section
+                document.getElementById("comments-section").insertAdjacentHTML('beforeend', newComment);
+                // Hide the modal and reset the textarea
+                document.getElementById("commentModal").classList.add("hidden");
+                document.getElementById("commentForm").reset();
+            } else {
+                alert("Failed to add comment: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+
+    // JavaScript for slideshow navigation
+    let currentSlide = 0;
+    const slides = document.querySelectorAll("#slideshow img");
+    const dots = document.querySelectorAll("#dotsContainer .dot");
+    let slideInterval;
+
+    function updateSlides() {
+        slides.forEach((slide, index) => {
+            slide.style.opacity = index === currentSlide ? "1" : "0";
+            dots[index].classList.toggle("bg-gray-800", index === currentSlide);
+            dots[index].classList.toggle("bg-gray-300", index !== currentSlide);
+        });
+    }
+
+    function showNextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateSlides();
+    }
+
+    function resetSlideInterval() {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(showNextSlide, 5000); // Restart the timer to 5 seconds
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", function() {
+        showNextSlide();
+        resetSlideInterval();  // Reset the interval when clicking the next button
+    });
+
+    document.getElementById("prevBtn").addEventListener("click", function() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        updateSlides();
+        resetSlideInterval();  // Reset the interval when clicking the prev button
+    });
+
+    // Initial update to show the first slide
+    updateSlides();
+
+    // Automatically change slides every 5 seconds
+    slideInterval = setInterval(showNextSlide, 5000);  // 5000 milliseconds = 5 seconds
+</script>
+
+{% endblock content %}

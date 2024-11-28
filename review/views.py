@@ -1,8 +1,9 @@
+import json
 from django.urls import reverse
 from product.models import Product
 from review.models import Review
 from review.forms import ReviewEntryForm
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
@@ -55,6 +56,43 @@ def add_review_entry_ajax(request):
     return render(request, 'review_form.html', {
         'error_message': "Invalid input. Please fill all fields.",
     })
+
+@csrf_exempt
+def add_review_flutter(request):
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+        ride = Product.objects.get(id=data["ride_id"])
+
+        new_review = Review.objects.create(
+            user=request.user,
+            ride=ride,
+            rating=int(data["rating"]),
+            review_message=data["review_message"] 
+        )
+
+        new_review.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+
+def all_reviews_flutter(request):
+    list_review = []
+    reviews = Review.objects.all()
+
+    for review in reviews:
+        review_data = {
+            "image": review.ride.image_url,
+            "username": review.user.username,
+            "rideName": review.ride.name,
+            "rating": review.rating,
+            "reviewMessage": review.review_message,
+        }
+
+        list_review.append(review_data)
+        
+    return HttpResponse(json.dumps(list_review), content_type="application/json")
 
 @login_required(login_url="authentication:login")
 def delete_review(request, review_id):
