@@ -1,4 +1,5 @@
 import json
+import uuid
 from django.urls import reverse
 from product.models import Product
 from review.models import Review
@@ -14,7 +15,7 @@ from django.utils.html import strip_tags
 # Create your views here.
 @login_required(login_url="authentication:login")
 def show_main(request):
-    reviews = Review.objects.all()
+    reviews = Review.objects.all().order_by('-id')
     user = request.user
     context = {
         'user' : user,
@@ -62,7 +63,8 @@ def add_review_flutter(request):
     if request.method == 'POST':
 
         data = json.loads(request.body)
-        ride = Product.objects.get(id=data["ride_id"])
+        id = uuid.UUID(data["id"])
+        ride = Product.objects.get(id=data["id"])
 
         new_review = Review.objects.create(
             user=request.user,
@@ -93,6 +95,20 @@ def all_reviews_flutter(request):
         list_review.append(review_data)
         
     return HttpResponse(json.dumps(list_review), content_type="application/json")
+
+def all_rides_flutter(request):
+    list_ride = []
+    rides = Product.objects.all().order_by('-id')
+
+    for ride in rides:
+        ride_data = {
+            "id": str(ride.id),
+            "image": ride.image_url,
+            "rideName": ride.name,
+        }
+
+        list_ride.append(ride_data)
+    return HttpResponse(json.dumps(list_ride), content_type="application/json")
 
 @login_required(login_url="authentication:login")
 def delete_review(request, review_id):
