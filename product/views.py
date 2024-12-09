@@ -1,3 +1,5 @@
+from decimal import Decimal
+import json
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product
@@ -128,7 +130,58 @@ def add_product(request):
     
     return JsonResponse({"errors": form.errors} if form.errors else {"message": "Product created successfully"}, status=201 if form.is_valid() else 400)
 
+@csrf_exempt
+def add_product_flutter(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
 
+            # Add validation for required fields
+            required_fields = ['name', 'year', 'price', 'km_driven', 'image_url', 'dealer']
+            for field in required_fields:
+                if not data.get(field):
+                    return JsonResponse({
+                        "status": "error", 
+                        "message": f"Missing required field: {field}"
+                    }, status=400)
+
+            # Type checking and additional validations
+            try:
+                product_year = int(data.get('year'))
+                product_price = Decimal(data.get('price'))
+                product_km_driven = int(data.get('km_driven'))
+            except (ValueError, TypeError):
+                return JsonResponse({
+                    "status": "error", 
+                    "message": "Invalid data type for year, price, or km_driven"
+                }, status=400)
+
+            new_product = Product.objects.create(
+                name=data.get('name'),
+                year=product_year,
+                price=product_price,
+                km_driven=product_km_driven,
+                image_url=data.get('image_url'),
+                dealer=data.get('dealer')
+            )
+
+            return JsonResponse({
+                "status": "success", 
+                "message": "Product added successfully",
+                "product_id": str(new_product.id)
+            }, status=201)
+
+        except json.JSONDecodeError:
+            return JsonResponse({
+                "status": "error", 
+                "message": "Invalid JSON"
+            }, status=400)
+
+    return JsonResponse({
+        "status": "error", 
+        "message": "Method not allowed"
+    }, status=405)
+    
 @login_required
 def delete_product(request, id):
     # Get the product by ID and delete it
@@ -138,6 +191,45 @@ def delete_product(request, id):
     
     product.delete()  # Delete the product
     return HttpResponseRedirect(reverse('product:show_product_page'))  # Redirect to product page
+
+@csrf_exempt
+def delete_product_flutter(request, id):
+    try:
+        # Get the product by ID and delete it
+        product = Product.objects.get(pk=id)
+        
+        # Check user privilege
+        if request.user.userprofile.privilege != "admin":
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Permission denied. Only admins can delete products.'
+            }, status=403)
+        
+        # Store the product name before deletion
+        product_name = product.name
+        
+        # Delete the product
+        product.delete()
+        
+        # Return success response
+        return JsonResponse({
+            'status': 'success',
+            'message': f'Product "{product_name}" deleted successfully'
+        })
+    
+    except Product.DoesNotExist:
+        # Handle case where product is not found
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Product not found'
+        }, status=404)
+    
+    except Exception as e:
+        # Handle any other unexpected errors
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
 
 @login_required
 def show_xml(request):

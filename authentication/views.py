@@ -148,3 +148,36 @@ def register_mobile(request):
         "message": "Use POST method to register."
     }, status=4
     )
+
+def check_login(request):
+    if request.user.is_authenticated:
+        return JsonResponse({
+            'is_logged_in': True,
+            'username': request.user.username
+        })
+    else:
+        return JsonResponse({
+            'is_logged_in': False,
+            'username': None
+        })
+
+@csrf_exempt
+def get_profile(request):
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+        
+        profile_data = {
+            'id': profile.id,
+            'username': profile.user.username,
+            'name': profile.name,
+            'email': profile.user.email,
+            'privilege': profile.privilege,
+            'cart_items': list(profile.cart.values('id', 'name', 'price'))  
+        }
+        
+        return JsonResponse(profile_data, safe=True)
+    
+    except UserProfile.DoesNotExist:
+        return JsonResponse({
+            'error': 'User profile not found'
+        }, status=404)
