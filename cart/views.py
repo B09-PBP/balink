@@ -11,6 +11,8 @@ from authentication.models import UserProfile
 from product.models import Product
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.http import require_POST
+import json
+from django.http import JsonResponse
 
 @csrf_exempt
 @login_required(login_url="authentication:login")
@@ -38,7 +40,7 @@ def show_cart(request):
         form.save()
 
         for car in cart:
-            history.buku.add(car)
+            history.car.add(car)
             request.user.userprofile.owned_cars.add(car)
             request.user.userprofile.cart.remove(car)
 
@@ -124,3 +126,37 @@ def show_json(request):
 def show_json_by_id(request, id):
     data = History.objects.filter(pk=id)  # Use the correct model here
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def add_product_to_cart_flutter(request, user_id, product_id):
+    user = get_object_or_404(User, id=user_id)
+    product = get_object_or_404(Product, id=product_id)
+
+    # Menemukan atau membuat cart baru untuk user
+    cart, created = History.objects.get_or_create(user=user, name="Default Cart", address="No address")
+    
+    cart.car.add(product)  # Menambahkan produk ke cart
+    cart.save()
+
+    return JsonResponse({'message': 'Product added to cart'}, status=200)
+
+# Mengambil produk dari cart pengguna
+def get_user_cart(request, user_id):
+    try:
+        cart = History.objects.get(user=user_id)
+        products = cart.car.all()
+        product_list = [{"name": p.name, "price": str(p.price), "description": p.description} for p in products]
+        return JsonResponse({"cart": product_list}, status=200)
+    except History.DoesNotExist:
+        return JsonResponse({"message": "Cart not found"}, status=404)
+
+# Menghapus produk dari cart
+def remove_product_from_cart(request, user_id, product_id):
+    user = get_object_or_404(User, id=user_id)
+    product = get_object_or_404(Product, id=product_id)
+    try:
+        cart = History.objects.get(user=user)
+        cart.car.remove(product)
+        cart.save()
+        return JsonResponse({'message': 'Product removed from cart'}, status=200)
+    except History.DoesNotExist:
+        return JsonResponse({'message': 'Cart not found'}, status=404)
