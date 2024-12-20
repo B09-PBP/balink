@@ -124,3 +124,39 @@ def show_json(request):
 def show_json_by_id(request, id):
     data = History.objects.filter(pk=id)  # Use the correct model here
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+@csrf_exempt
+def add_product_to_cart_flutter(request, product_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User is not authenticated'}, status=401)
+        
+    product = get_object_or_404(Product, id=product_id)
+    user_profile = request.user.userprofile  
+
+    try:
+        user_profile.cart.add(product) 
+        return JsonResponse({'message': 'Product added to cart successfully'}, status=200)
+    except Exception as e:
+        return JsonResponse({'error': f'Error adding product to cart: {str(e)}'}, status=500)
+
+# Mengambil produk dari cart pengguna
+def get_user_cart(request, user_id):
+    try:
+        cart = History.objects.get(user=user_id)
+        products = cart.car.all()
+        product_list = [{"name": p.name, "price": str(p.price), "description": p.description} for p in products]
+        return JsonResponse({"cart": product_list}, status=200)
+    except History.DoesNotExist:
+        return JsonResponse({"message": "Cart not found"}, status=404)
+
+# Menghapus produk dari cart
+def remove_product_from_cart(request, user_id, product_id):
+    user = get_object_or_404(User, id=user_id)
+    product = get_object_or_404(Product, id=product_id)
+    try:
+        cart = History.objects.get(user=user)
+        cart.car.remove(product)
+        cart.save()
+        return JsonResponse({'message': 'Product removed from cart'}, status=200)
+    except History.DoesNotExist:
+        return JsonResponse({'message': 'Cart not found'}, status=404)
