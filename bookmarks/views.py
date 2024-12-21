@@ -9,6 +9,8 @@ from bookmarks.forms import BookmarkForm
 from django.core import serializers
 from django.contrib.auth.models import User
 import json
+from django.http import JsonResponse
+from product.models import Product
 
 # View all bookmarks for the logged-in user
 @csrf_exempt
@@ -80,6 +82,7 @@ def update_bookmark(request, id):
     return HttpResponse(b"FAILED", status=400)
 
 # Handle deleting a bookmark
+@csrf_exempt
 @login_required(login_url="authentication:login")
 def delete_bookmark(request, id):
     bookmark = get_object_or_404(Bookmark, pk=id, user=request.user)  # Ensure only user's bookmark can be deleted
@@ -108,12 +111,63 @@ def get_user_bookmarks(request):
 
     return HttpResponse(json.dumps(data), content_type="application/json")
 
+@csrf_exempt
 def show_json(request):
     user = request.user
-    data = Bookmark.objects.filter(user=user)
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    bookmarks = Bookmark.objects.filter(user=user)
+    data = []
+    for bookmark in bookmarks:
+        data.append({
+            'id': bookmark.id,
+            'note': bookmark.note,
+            'priority': bookmark.priority,
+            'reminder': bookmark.reminder.strftime("%Y-%m-%d") if bookmark.reminder else None,
+            'product': {
+                'name': bookmark.product.name,
+                'image_url': bookmark.product.image_url,
+            },
+        })
+    return JsonResponse(data, safe=False)
 
+@csrf_exempt
 def show_json_by_id(request, id):
     user = request.user
-    data = Bookmark.objects.filter(pk=id, user=user)
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    bookmark = get_object_or_404(Bookmark, pk=id, user=user)
+    data = {
+        'id': bookmark.id,
+        'note': bookmark.note,
+        'priority': bookmark.priority,
+        'reminder': bookmark.reminder.strftime("%Y-%m-%d") if bookmark.reminder else None,
+        'product': {
+            'name': bookmark.product.name,
+            'image_url': bookmark.product.image_url,
+        },
+    }
+    return JsonResponse(data)
+
+@csrf_exempt
+@login_required(login_url="authentication:login")
+def update_bookmark_flutter(request, id):
+    if request.method == "POST":
+        bookmark = Bookmark.objects.get(pk=id, user=request.user)
+        if "note" in request.POST:
+            bookmark.note = request.POST["note"]
+        if "priority" in request.POST:
+            bookmark.priority = request.POST["priority"]
+        if "reminder" in request.POST:
+            bookmark.reminder = request.POST["reminder"]
+
+        bookmark.save()
+        # Kembalikan JSON
+        return JsonResponse({"status": "success"}, status=200)
+
+    return JsonResponse({"status": "error", "message": "Invalid method"}, status=405)
+
+@csrf_exempt
+@login_required(login_url="authentication:login")
+def delete_bookmark_flutter(request, id):
+    if request.method == "POST":
+        bookmark = get_object_or_404(Bookmark, pk=id, user=request.user)
+        bookmark.delete()
+        return JsonResponse({"status": "success"}, status=200)
+    return JsonResponse({"status": "error", "message": "Invalid method"}, status=405)

@@ -132,16 +132,15 @@
         fetch(`/bookmarks/json/${id}/`)
             .then(response => response.json())
             .then(data => {
-            if (data.length > 0) {
-                const bookmark = data[0].fields;
-                document.getElementById("bookmark_id").value = id;
-                document.getElementById("update-note").value = bookmark.note || "";
-                document.getElementById("update-priority").value = bookmark.priority || "";
-                document.getElementById("update-reminder").value = bookmark.reminder || "";
-            } else {
-                console.error("Bookmark data not found.");
-                alert("Bookmark data not found.");
-            }
+                if (data) {
+                    document.getElementById("bookmark_id").value = id;
+                    document.getElementById("update-note").value = data.note || "";
+                    document.getElementById("update-priority").value = data.priority || "";
+                    document.getElementById("update-reminder").value = data.reminder || "";
+                } else {
+                    console.error("Bookmark data not found.");
+                    alert("Bookmark data not found.");
+                }
             })
             .catch(error => {
                 console.error("Error fetching bookmark data:", error);
