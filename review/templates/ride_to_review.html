@@ -17,6 +17,25 @@
     </div>
 </div>
 
+<!-- Search bar -->
+<div class="container mx-auto mt-4 px-4">
+    <form method="GET" action="{% url 'review:ride_to_review' %}" class="flex items-center space-x-4">
+        <input
+            type="text"
+            name="search"
+            placeholder="Search your ride to review"
+            class="flex-grow border border-gray-300 bg-gray-200 text-black placeholder-gray-500 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition"
+            value="{{ request.GET.search|default:'' }}"
+        />
+        <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-bold shadow transition">
+            Search
+        </button>
+    </form>
+</div>
+
+<!-- All rides -->
 <div class="container mx-auto mt-6 px-4">
     <div class="product-list grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6" id="product-list">
         {% for product in products %}

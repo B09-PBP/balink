@@ -105,6 +105,29 @@ def add_review_flutter(request):
     else:
         return JsonResponse({"status": "error"}, status=401)
 
+# Method edit review di flutter
+@csrf_exempt
+@login_required
+def edit_review_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        review_id = data["id"]
+        rating = int(data["rating"])
+        review_message = data["review_message"]
+
+        try:
+            review = Review.objects.get(id=review_id, user=request.user)
+        except Review.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Review not found or you don't have permission to edit it"}, status=400)
+
+        review.rating = rating
+        review.review_message = review_message
+
+        review.save()
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method"}, status=401)
+
 # Method untuk data json all reviews di flutter
 @login_required
 def all_reviews_flutter(request):
@@ -124,6 +147,25 @@ def all_reviews_flutter(request):
         list_review.append(review_data)
         
     return HttpResponse(json.dumps(list_review), content_type="application/json")
+
+@login_required
+def user_review_flutter(request):
+    user_reviews = Review.objects.filter(user=request.user).order_by('-id')
+
+    list_user_review = []
+    for review in user_reviews:
+        review_data = {
+            "id": str(review.id),
+            "image": review.ride.image_url,
+            "username": review.user.username,
+            "rideName": review.ride.name,
+            "rating": review.rating,
+            "reviewMessage": review.review_message,
+        }
+
+        list_user_review.append(review_data)
+
+    return HttpResponse(json.dumps(list_user_review), content_type="application/json")
 
 # Method untuk data json all rides to review di flutter
 @login_required
