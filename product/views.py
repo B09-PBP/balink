@@ -101,6 +101,61 @@ def edit_product(request, id):
     return render(request, 'product_edit.html', {'form': form, 'product': product})
 
 @csrf_exempt
+def edit_product_flutter(request, id):
+    try:
+        # Parse the incoming JSON data
+        data = json.loads(request.body)
+        
+        # Get the product instance
+        product = Product.objects.get(pk=id)
+        
+        # Validate required fields
+        required_fields = ['name', 'year', 'price', 'km_driven', 'image_url', 'dealer']
+        if not all(field in data for field in required_fields):
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Missing required fields'
+            }, status=400)
+        
+        # Update the product fields
+        product.name = data['name']
+        product.year = data['year']
+        product.price = data['price']
+        product.km_driven = data['km_driven']
+        product.image_url = data['image_url']
+        product.dealer = data['dealer']
+        
+        # Save the updated product
+        product.save()
+        
+        # Serialize the updated product
+        updated_product = serializers.serialize('json', [product])
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Product updated successfully',
+            'product': json.loads(updated_product)[0]
+        }, status=200)
+        
+    except ObjectDoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Product not found'
+        }, status=404)
+        
+    except ValueError as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': f'Invalid data format: {str(e)}'
+        }, status=400)
+        
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': f'An error occurred: {str(e)}'
+        }, status=500)
+
+@csrf_exempt
 @require_POST
 @login_required
 def add_product(request):

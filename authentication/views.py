@@ -153,12 +153,14 @@ def check_login(request):
     if request.user.is_authenticated:
         return JsonResponse({
             'is_logged_in': True,
-            'username': request.user.username
+            'username': request.user.username,
+            'privilege': UserProfile.objects.get(user=request.user).privilege
         })
     else:
         return JsonResponse({
             'is_logged_in': False,
-            'username': None
+            'username': None,
+            'privilege': None
         })
 
 @csrf_exempt
