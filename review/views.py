@@ -11,23 +11,36 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
+from django.db.models import Q
 
 # Create your views here.
+# Method untuk show all reviews page
 @login_required(login_url="authentication:login")
 def show_main(request):
-    reviews = Review.objects.all().order_by('-id')
+    rating_filter = request.GET.get('rating')
+    if rating_filter:
+        reviews = Review.objects.filter(rating=rating_filter).order_by('-id')
+    else:
+        reviews = Review.objects.all().order_by('-id')
+
     user = request.user
     context = {
-        'user' : user,
+        'user': user,
         'reviews': reviews,
     }
     return render(request, "review.html", context)
 
+# Method untuk show all rides to review
 @login_required(login_url="authentication:login")
 def ride_to_review(request):
-    rides = Product.objects.all()
+    search_key = request.GET.get('search', '')
+    
+    if search_key:
+        rides = Product.objects.filter(name__icontains=search_key)
+    else:
+        rides = Product.objects.all()
+    
     form = ReviewEntryForm(request.POST or None)
-
     context = {
         'products': rides,
         'form': form,
@@ -35,6 +48,7 @@ def ride_to_review(request):
 
     return render(request, "ride_to_review.html", context)
 
+# Method untuk ajax add review
 @csrf_exempt
 @require_POST
 def add_review_entry_ajax(request):
@@ -58,7 +72,19 @@ def add_review_entry_ajax(request):
         'error_message': "Invalid input. Please fill all fields.",
     })
 
+# Method untuk delete review for admin
+@login_required(login_url="authentication:login")
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    
+    if request.user.userprofile.privilege == "admin":
+        review.delete()
+    
+    return redirect('review:show_main')
+
+# Method untuk add review in flutter
 @csrf_exempt
+@login_required
 def add_review_flutter(request):
     if request.method == 'POST':
 
@@ -79,12 +105,15 @@ def add_review_flutter(request):
     else:
         return JsonResponse({"status": "error"}, status=401)
 
+# Method untuk data json all reviews di flutter
+@login_required
 def all_reviews_flutter(request):
-    list_review = []
-    reviews = Review.objects.all()
+    reviews = Review.objects.all().order_by('-id')
 
+    list_review = []
     for review in reviews:
         review_data = {
+            "id": str(review.id),
             "image": review.ride.image_url,
             "username": review.user.username,
             "rideName": review.ride.name,
@@ -96,6 +125,8 @@ def all_reviews_flutter(request):
         
     return HttpResponse(json.dumps(list_review), content_type="application/json")
 
+# Method untuk data json all rides to review di flutter
+@login_required
 def all_rides_flutter(request):
     list_ride = []
     rides = Product.objects.all().order_by('-id')
@@ -110,14 +141,16 @@ def all_rides_flutter(request):
         list_ride.append(ride_data)
     return HttpResponse(json.dumps(list_ride), content_type="application/json")
 
-@login_required(login_url="authentication:login")
-def delete_review(request, review_id):
+# Method untuk delete review for admin di flutter
+@login_required
+@csrf_exempt
+def delete_review_flutter(request, review_id):
+    if request.user.userprofile.privilege != "admin":
+        return JsonResponse({'status': 'error', 'message': 'You do not have permission'}, status=403)
+
     review = get_object_or_404(Review, id=review_id)
-    
-    if request.user.userprofile.privilege == "admin":
-        review.delete()
-    
-    return redirect('review:show_main')
+    review.delete()
+    return JsonResponse({'status': 'success', 'message': 'Review deleted successfully'})
 
 def show_json(request):
     data = Review.objects.all()
